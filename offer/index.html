@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Former Casino Owner Breaks His Silence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #5B4FFF 0%, #4338CA 100%);
+            color: white;
+            text-align: center;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .video-badge {
+            display: inline-block;
+            background: #5B4FFF;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 30px 0 20px 0;
+        }
+
+        h1 {
+            font-family: 'Merriweather', serif;
+            font-size: 42px;
+            font-weight: 900;
+            line-height: 1.2;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .subheadline {
+            font-family: 'Merriweather', serif;
+            font-size: 18px;
+            color: #555;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+
+        .media-logos {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .as-seen-on {
+            font-size: 13px;
+            font-weight: 700;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
+        }
+
+        .logos-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 900;
+            color: #000;
+        }
+
+        .cbs-logo {
+            font-family: 'Merriweather', serif;
+        }
+
+        .abc-logo {
+            border-radius: 50%;
+            background: #000;
+            color: #fff;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .nbc-logo {
+            color: #000;
+            font-size: 28px;
+        }
+
+        .fox-logo {
+            color: #000;
+            font-size: 36px;
+            font-weight: 900;
+        }
+
+        .video-container {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            margin: 30px 0;
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .video-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: #FFF9E6;
+            border-left: 4px solid #FFD700;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 6px;
+        }
+
+        .highlight-box p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .highlight-box strong {
+            color: #000;
+            font-weight: 700;
+        }
+
+        .content-section {
+            margin: 40px 0;
+        }
+
+        h2 {
+            font-family: 'Merriweather', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .feature-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #5B4FFF;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            margin-top: 3px;
+        }
+
+        .feature-content h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .feature-content p {
+            font-size: 16px;
+            color: #555;
+            margin: 0;
+        }
+
+        .quote-block {
+            background: #f0f4ff;
+            border-left: 5px solid #5B4FFF;
+            padding: 25px 30px;
+            margin: 30px 0;
+            border-radius: 6px;
+            font-style: italic;
+        }
+
+        .quote-block p {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .quote-author {
+            font-style: normal;
+            font-weight: 700;
+            color: #1a1a1a;
+            font-size: 15px;
+            margin-top: 10px;
+        }
+
+        .revelation-section {
+            margin: 40px 0;
+        }
+
+        .revelation-intro {
+            font-size: 17px;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .bullet-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .bullet-list li {
+            padding-left: 30px;
+            position: relative;
+            margin-bottom: 12px;
+            font-size: 17px;
+            line-height: 1.7;
+            color: #333;
+        }
+
+        .bullet-list li::before {
+            content: "•";
+            color: #5B4FFF;
+            font-weight: 900;
+            font-size: 24px;
+            position: absolute;
+            left: 8px;
+            top: -2px;
+        }
+
+        .checklist {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+
+        .checklist-intro {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        .checklist-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+
+        .check-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            background: #10B981;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 16px;
+            margin-top: 2px;
+        }
+
+        .checklist-item p {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .warning-box {
+            background: #FEF3E2;
+            border: 2px solid #F59E0B;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+
+        .warning-box h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .warning-quote {
+            background: #ffffff;
+            border-left: 4px solid #F59E0B;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+            font-style: italic;
+        }
+
+        .warning-quote p {
+            font-size: 17px;
+            color: #333;
+            margin: 0;
+        }
+
+        .final-section {
+            background: #f8f9fa;
+            padding: 35px;
+            border-radius: 12px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .final-section h2 {
+            margin-bottom: 20px;
+        }
+
+        .final-section p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+            color: white;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            margin: 25px 0;
+            box-shadow: 0 8px 25px rgba(123, 58, 237, 0.35);
+            transition: all 0.3s ease;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(123, 58, 237, 0.45);
+        }
+
+        .cta-subtext {
+            font-size: 13px;
+            color: #666;
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cta-feature {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+
+        .cta-feature::before {
+            content: "✓";
+            color: #10B981;
+            font-weight: 900;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 300px;
+            background: #000;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 32px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .logos-container {
+                gap: 15px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+
+            .cta-button {
+                padding: 18px 40px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        FREE VIDEO - Limited Access - Tap Below to Watch Now
+    </div>
+
+    <div class="container">
+        <div class="video-badge">FREE VIDEO</div>
+
+        <h1>Former Casino Owner Breaks His Silence</h1>
+        
+        <p class="subheadline">Reveals the 3-Step Slot Trick Casinos Never Wanted Public</p>
+
+        <div class="media-logos">
+            <div class="as-seen-on">AS SEEN ON</div>
+            <img src="/offer/images/news.png" alt="As Seen On CBS, ABC, NBC, FOX" style="max-width: 100%; height: auto; margin: 0 auto; display: block;">
+        </div>
+
+        <div class="video-container">
+            <img src="/offer/images/image.png" class="video-thumbnail" alt="Gary Miller Casino Slot Trick Video">
+            <div class="video-overlay">
+                <strong>NEXT:</strong> Gary Miller Reveals 3-Step Slot Trick<br>
+                <small>Why Casino Owners Hate The 3-Step Slot Trick - Hint: It Works 9/10 Times</small>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <p><strong>Casinos don't want you hearing this.</strong></p>
+            <p>A former casino owner has finally spoken out—and what he revealed explains <strong>why most slot players lose… and why a small group keeps winning.</strong></p>
+            <p style="margin-bottom: 0;">It's not luck.<br>
+            It's not timing.<br>
+            And it's not the flashy machines.</p>
+        </div>
+
+        <div class="content-section">
+            <p>It's a <strong>simple 3-step habit</strong> insiders quietly followed while everyone else stayed distracted.</p>
+
+            <h2>Why this is different</h2>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <div class="feature-content">
+                        <h3>No systems or complicated strategies</h3>
+                        <p>Just a short habit you can learn in minutes.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <div class="feature-content">
+                        <h3>No jackpot chasing</h3>
+                        <p>Works on slots, roulette/not machines most people ignore.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <div class="feature-content">
+                        <h3>No playing longer</h3>
+                        <p>Gary spent many years uncovering this without using tricks.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>The Man Who Finally Spoke Up</h2>
+
+            <p>For decades, <strong>Gary Miller</strong> stayed silent.</p>
+
+            <p>As a casino owner, Gary knew one of these slot tricks casino-designed tricks in casinos were engineered to drain players, fast and without mercy meant to push down or cause others.</p>
+
+            <p>After stepping away from the business, Gary made a decision insiders never do:</p>
+
+            <div class="quote-block">
+                <p>"I couldn't keep watching regular people get pulled into machines designed to fail," Gary says.</p>
+                <p style="margin: 0;">"Casinos never treat all slots the same… and players are never told that."</p>
+            </div>
+        </div>
+
+        <div class="revelation-section">
+            <h2>What Gary Revealed Shocked Even Experienced Players</h2>
+
+            <p class="revelation-intro">Buried inside an old tech discussion was a trait insiders understood... but never shared.</p>
+
+            <p>Once Gary began following it himself, something changed:</p>
+
+            <ul class="bullet-list">
+                <li>Wins stopped feeling random</li>
+                <li>Results became predictable</li>
+                <li>It turns free, he discovered casinos quietly removed <strong>seven figures</strong></li>
+            </ul>
+
+            <p style="margin-top: 20px;">Not by luck.<br>
+            By understanding how casinos actually operate.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>The Truth Casinos Never Advertise</h2>
+
+            <p><strong>Not all slot machines are built to pay the same.</strong></p>
+
+            <p>And the flashiest, branded machines are often the worst ones to play.</p>
+
+            <p>That's why casino guests them the highest.</p>
+
+            <div class="quote-block">
+                <p>"I used to bounce machine to machine like everyone else."</p>
+                <p>"Once I followed this simple 3-step habit, the machines stopped being a guess. That's when everything changed."</p>
+                <p class="quote-author">— Gary Miller</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Gary Breaks It All Down</h2>
+
+            <p>In this short video, Gary shows you:</p>
+
+            <div class="checklist">
+                <div class="checklist-item">
+                    <div class="check-icon">✓</div>
+                    <p><strong>The exact 3-step slot habit</strong></p>
+                </div>
+                <div class="checklist-item">
+                    <div class="check-icon">✓</div>
+                    <p><strong>Which machines casinos quietly profit from the most</strong></p>
+                </div>
+                <div class="checklist-item">
+                    <div class="check-icon">✓</div>
+                    <p><strong>What to ignore—even when it feels tempting</strong></p>
+                </div>
+                <div class="checklist-item">
+                    <div class="check-icon">✓</div>
+                    <p><strong>How ordinary players are already using this legally</strong></p>
+                </div>
+            </div>
+
+            <p style="font-weight: 600; font-size: 18px; text-align: center; margin-top: 25px;">No math. No experience. No tricks.</p>
+        </div>
+
+        <div class="warning-box">
+            <h3>Gary's Warning</h3>
+
+            <div class="warning-quote">
+                <p>"This video keeps getting taken down.</p>
+                <p style="margin: 0;">Once casinos fully catch on, this won't last long."</p>
+            </div>
+        </div>
+
+        <div class="proof-section" style="background: #f8f9fa; padding: 40px 30px; border-radius: 12px; margin: 40px 0; text-align: center;">
+            <h2 style="margin-bottom: 30px;">Real People, Real Results</h2>
+            
+            <div style="max-width: 400px; margin: 0 auto 40px auto;">
+                <img src="/offer/images/image2.gif" alt="$3,000 Winnings" style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+            </div>
+
+            <div style="max-width: 600px; margin: 0 auto;">
+                <img src="/offer/images/chat.png" alt="User Testimonials" style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
+            </div>
+        </div>
+
+        <div class="final-section">
+            <h2>Exclusive Access for Our Readers</h2>
+
+            <p>Because you're here right now, you've been granted <strong>free access</strong> to the full video breakdown.</p>
+
+            <p style="margin-bottom: 25px;">Tap below to watch before it disappears.</p>
+
+            <a href="#" class="cta-button">
+                👉 Tap Here To Watch The Video Now<br>
+                <span style="font-size: 14px; font-weight: 400;">And stop playing the casino's game</span>
+            </a>
+
+            <div class="cta-subtext">
+                <span class="cta-feature">Works on common machines</span>
+                <span class="cta-feature">No experience needed</span>
+                <span class="cta-feature">Watch instantly</span>
+            </div>
+
+            <div class="video-placeholder">
+                [Video Player Embed Area]
+            </div>
+        </div>
+    </div>
+</body>
+</html>
