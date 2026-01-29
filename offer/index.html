@@ -12,6 +12,12 @@
         bge('init', "906280270015635200");
     </script>
     <script async src="https://api.topnotchs.site/ad/events.js?pixel_id=906280270015635200"></script>
+    
+    <script>
+        function bge_button() {
+            bge('event', 'button', {configId: '906280270015635200', monetary: 0});
+        }
+    </script>
     <!-- End BIGO Ads Pixel -->
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -584,6 +590,7 @@
             <a href="https://go.pointclickpixel.com/click" 
                id="cta-main-button"
                class="cta-button"
+               onclick="bge_button()"
                style="display: block;">
                 👉 Tap Here To Watch The Video Now<br>
                 <span style="font-size: 16.25px; font-weight: 400; opacity: 0.95;">And stop playing the casino's game</span>
@@ -604,6 +611,7 @@
             <p style="font-size: 18.75px; color: #444; margin-bottom: 10px;">Tap the button to open the video on the next page.</p>
             <a href="https://go.pointclickpixel.com/click" 
                id="cta-text-link"
+               onclick="bge_button()"
                style="color: #0066CC; font-weight: 700; font-size: 20px; text-decoration: underline;">Open the video now</a>
 
             <div style="max-width: 550px; margin: 40px auto 0 auto;">
