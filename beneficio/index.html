@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google Tag Manager -->
+  <script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W4VTJJM4');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Final Expense</title>
+
+  <style>
+    :root {
+      --blue: #1f5f8b;
+      --blue-soft: #eaf4fb;
+      --green: #2d8f6f;
+      --green-dark: #1f7459;
+      --warm: #fff8ef;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --white: #ffffff;
+      --border: rgba(31, 95, 139, 0.14);
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, var(--blue-soft) 0%, var(--warm) 100%);
+      color: var(--text);
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 760px;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .top-bar {
+      height: 8px;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+    }
+
+    .content {
+      padding: 34px 28px 30px;
+      text-align: center;
+    }
+
+    .trust-row {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #f4fbf8;
+      color: var(--green-dark);
+      border: 1px solid rgba(45, 143, 111, 0.16);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0 auto 18px auto;
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    h1 {
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.12;
+      margin: 0 0 14px;
+      color: #163d5a;
+      text-align: center;
+    }
+
+    .subheadline {
+      margin: 0 auto 26px;
+      font-size: clamp(17px, 2.3vw, 20px);
+      line-height: 1.5;
+      color: var(--muted);
+      text-align: center;
+      max-width: 640px;
+    }
+
+    .panel-wrap {
+      position: relative;
+      min-height: 340px;
+    }
+
+    .step {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translateX(26px) scale(.985);
+      pointer-events: none;
+      transition: opacity .45s ease, transform .45s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .step.active {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      pointer-events: auto;
+      position: relative;
+    }
+
+    .question-box,
+    .result-box,
+    .loading-box {
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      border: 1px solid rgba(31, 95, 139, 0.1);
+      border-radius: 22px;
+      padding: 28px;
+    }
+
+    .step-label {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--green-dark);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .question {
+      font-size: clamp(26px, 3vw, 34px);
+      line-height: 1.2;
+      font-weight: 800;
+      text-align: center;
+      margin: 0 0 26px;
+      color: #153a57;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .option-btn,
+    .call-btn {
+      appearance: none;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+      text-decoration: none;
+    }
+
+    .option-btn {
+      background: linear-gradient(90deg,#0f766e,#22c55e);
+      color: white;
+      padding: 18px 16px;
+      font-size: 18px;
+      font-weight: 800;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+    }
+
+    .option-btn:hover,
+    .call-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .option-btn:active,
+    .call-btn:active {
+      transform: translateY(0);
+    }
+
+    /* ===== LOADING STEP ===== */
+    .loading-title {
+      font-size: clamp(22px, 2.8vw, 28px);
+      font-weight: 800;
+      color: #153a57;
+      margin: 0 0 8px;
+      text-align: center;
+    }
+
+    .loading-subtitle {
+      font-size: 16px;
+      color: var(--muted);
+      margin: 0 0 28px;
+      text-align: center;
+    }
+
+    .loading-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 auto;
+      max-width: 460px;
+      text-align: left;
+    }
+
+    .loading-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      background: #f8fafc;
+      border: 1px solid rgba(31, 95, 139, 0.08);
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--muted);
+      opacity: 0.4;
+      transition: all 0.4s ease;
+    }
+
+    .loading-item.processing {
+      opacity: 1;
+      background: #eaf4fb;
+      border-color: rgba(31, 95, 139, 0.25);
+      color: #153a57;
+    }
+
+    .loading-item.done {
+      opacity: 1;
+      background: #f0fdf4;
+      border-color: rgba(34, 197, 94, 0.3);
+      color: #14532d;
+    }
+
+    .loading-icon {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loading-item .spinner {
+      display: none;
+      width: 22px;
+      height: 22px;
+      border: 3px solid rgba(31, 95, 139, 0.2);
+      border-top-color: #1f5f8b;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .loading-item .check {
+      display: none;
+      width: 24px;
+      height: 24px;
+      background: #22c55e;
+      border-radius: 50%;
+      color: white;
+      font-size: 16px;
+      font-weight: 900;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loading-item .dot {
+      display: flex;
+      width: 22px;
+      height: 22px;
+      border: 2px solid rgba(107, 114, 128, 0.4);
+      border-radius: 50%;
+    }
+
+    .loading-item.processing .spinner { display: block; }
+    .loading-item.processing .check,
+    .loading-item.processing .dot { display: none; }
+
+    .loading-item.done .check { display: flex; }
+    .loading-item.done .spinner,
+    .loading-item.done .dot { display: none; }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===== RESULT STEP ===== */
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #16a34a;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 14px;
+    }
+
+    .pulse-dot {
+      width: 10px;
+      height: 10px;
+      background: white;
+      border-radius: 50%;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    .result-title {
+      font-size: clamp(24px, 3.4vw, 32px);
+      line-height: 1.15;
+      text-align: center;
+      margin: 0 0 14px;
+      color: #16614b;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .result-text {
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--text);
+      text-align: center;
+      margin: 0 0 22px;
+    }
+
+    .call-btn {
+      width: 100%;
+      padding: 22px 24px;
+      background: linear-gradient(90deg,#0f766e,#22c55e);
+      color: white;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.20);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-weight: 900;
+      font-size: 24px;
+      letter-spacing: .02em;
+      line-height: 1.15;
+      margin: 6px 0 14px 0;
+      text-align: center;
+    }
+
+    .free-note {
+      font-size: 15px;
+      line-height: 1.4;
+      color: var(--green-dark);
+      text-align: center;
+      margin: 0 0 22px;
+      font-weight: 700;
+    }
+
+    .instructions-box {
+      background: #fff8ef;
+      border: 1px solid rgba(210, 136, 46, 0.2);
+      border-radius: 16px;
+      padding: 18px 20px;
+      text-align: left;
+      margin: 0 0 16px;
+    }
+
+    .instructions-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #8a5a12;
+      text-align: center;
+      margin: 0 0 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .instructions-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      counter-reset: step-counter;
+    }
+
+    .instructions-list li {
+      counter-increment: step-counter;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 8px 0;
+      font-size: 15px;
+      line-height: 1.45;
+      color: #1f2937;
+    }
+
+    .instructions-list li::before {
+      content: counter(step-counter);
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      background: #1f5f8b;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 14px;
+    }
+
+    .final-warning {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--muted);
+      text-align: center;
+      margin: 0;
+      font-style: italic;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+        display: block;
+      }
+
+      .wrapper {
+        max-width: 100%;
+      }
+
+      .content {
+        padding: 20px 14px 18px;
+      }
+
+      .trust-row {
+        font-size: 12px;
+        line-height: 1.35;
+        padding: 10px 12px;
+        margin-bottom: 14px;
+      }
+
+      h1 {
+        font-size: 28px;
+        line-height: 1.12;
+        margin-bottom: 12px;
+      }
+
+      .subheadline {
+        font-size: 16px;
+        line-height: 1.45;
+        margin-bottom: 18px;
+      }
+
+      .question-box,
+      .result-box,
+      .loading-box {
+        padding: 20px 14px;
+        border-radius: 18px;
+      }
+
+      .question {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      .loading-title {
+        font-size: 20px;
+      }
+
+      .loading-subtitle {
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+
+      .loading-item {
+        font-size: 14px;
+        padding: 12px 14px;
+      }
+
+      .result-title {
+        font-size: 22px;
+        line-height: 1.12;
+        margin-bottom: 12px;
+      }
+
+      .result-text {
+        font-size: 15px;
+        line-height: 1.5;
+        margin-bottom: 18px;
+      }
+
+      .call-btn {
+        font-size: 17px;
+        line-height: 1.2;
+        padding: 18px 14px;
+        min-height: 60px;
+        border-radius: 14px;
+        margin: 4px 0 12px 0;
+        letter-spacing: 0;
+      }
+
+      .free-note {
+        font-size: 14px;
+        margin-bottom: 18px;
+      }
+
+      .instructions-box {
+        padding: 16px 14px;
+        border-radius: 14px;
+      }
+
+      .instructions-title {
+        font-size: 13px;
+      }
+
+      .instructions-list li {
+        font-size: 14px;
+      }
+
+      .options {
+        grid-template-columns: 1fr;
+      }
+
+      .option-btn {
+        min-height: 56px;
+        font-size: 18px;
+      }
+
+      .panel-wrap {
+        min-height: 420px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W4VTJJM4"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <div class="wrapper">
+    <div class="card">
+      <div class="top-bar"></div>
+
+      <div class="content">
+        <div class="trust-row">Información rápida · Proceso breve · Atención en español</div>
+
+        <div id="intro-header">
+          <h1>Miles de adultos mayores en <span id="state-name">EE.UU.</span> están reclamando hasta $25,000 para gastos finales — revisa si tú también calificas</h1>
+          <p class="subheadline">Responde 2 preguntas y descubre si puedes recibir este beneficio.</p>
+        </div>
+
+        <div class="panel-wrap">
+          <!-- STEP 1 -->
+          <section class="step active" id="step-1">
+            <div class="question-box">
+              <div class="step-label">Paso 1 de 3</div>
+              <h2 class="question">¿Tienes más de 50 años?</h2>
+              <div class="options">
+                <button class="option-btn" data-next="2">Sí</button>
+                <button class="option-btn" data-next="2">No</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- STEP 2 -->
+          <section class="step" id="step-2">
+            <div class="question-box">
+              <div class="step-label">Paso 2 de 3</div>
+              <h2 class="question">¿Vives en los Estados Unidos?</h2>
+              <div class="options">
+                <button class="option-btn" data-next="loading">Sí</button>
+                <button class="option-btn" data-next="loading">No</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- LOADING STEP -->
+          <section class="step" id="step-loading">
+            <div class="loading-box">
+              <div class="step-label">Procesando tu información</div>
+              <h2 class="loading-title">Verificando tu elegibilidad...</h2>
+              <p class="loading-subtitle">Esto tomará solo unos segundos</p>
+
+              <ul class="loading-list">
+                <li class="loading-item" id="load-1">
+                  <div class="loading-icon">
+                    <div class="dot"></div>
+                    <div class="spinner"></div>
+                    <div class="check">✓</div>
+                  </div>
+                  <span>Verificando elegibilidad para el beneficio</span>
+                </li>
+                <li class="loading-item" id="load-2">
+                  <div class="loading-icon">
+                    <div class="dot"></div>
+                    <div class="spinner"></div>
+                    <div class="check">✓</div>
+                  </div>
+                  <span>Revisando los últimos cupos disponibles</span>
+                </li>
+                <li class="loading-item" id="load-3">
+                  <div class="loading-icon">
+                    <div class="dot"></div>
+                    <div class="spinner"></div>
+                    <div class="check">✓</div>
+                  </div>
+                  <span>Buscando un agente en español disponible</span>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- RESULT STEP -->
+          <section class="step" id="step-3">
+            <div class="result-box">
+              <div class="result-badge">
+                <span class="pulse-dot"></span>
+                AGENTE DISPONIBLE AHORA
+              </div>
+
+              <h2 class="result-title">¡FELICIDADES! Un agente en español está listo para recibir tu llamada y ayudarte a reclamar tu beneficio</h2>
+
+              <p class="result-text">
+                Calificas para recibir <b>hasta $25,000</b> para cubrir gastos finales. Tu llamada será atendida en menos de 1 minuto.
+              </p>
+
+              <a class="call-btn" href="tel:+18334650147">
+                📞 LLAMAR GRATIS (833) 465-0147
+              </a>
+
+              <p class="free-note">
+                ✅ Llamada <b>100% GRATIS</b> desde cualquier teléfono en EE.UU.
+              </p>
+
+              <div class="instructions-box">
+                <p class="instructions-title">Qué hacer ahora:</p>
+                <ol class="instructions-list">
+                  <li>Toca el botón verde de arriba para abrir tu marcador.</li>
+                  <li>Presiona el botón verde <span style="display:inline-flex;align-items:center;justify-content:center;background:#22c55e;width:24px;height:24px;border-radius:50%;font-size:12px;vertical-align:middle;box-shadow:0 2px 4px rgba(0,0,0,0.2);"><span style="filter:brightness(0) invert(1);">📞</span></span> en tu teléfono para iniciar la llamada.</li>
+                  <li>Habla con el agente en español y confirma tu beneficio en menos de 2 minutos.</li>
+                </ol>
+              </div>
+
+              <p class="final-warning">
+                ⚠️ Hay pocos cupos disponibles hoy. Si cuelgas o no llamas ahora, tu lugar puede ser asignado a otra persona.
+              </p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const steps = document.querySelectorAll('.step');
+    const stepMap = {
+      '1': 'step-1',
+      '2': 'step-2',
+      'loading': 'step-loading',
+      '3': 'step-3'
+    };
+
+    function goToStep(stepKey) {
+      const introHeader = document.getElementById('intro-header');
+      const targetId = stepMap[stepKey];
+
+      // Hide intro header after step 1
+      if (stepKey !== '1') {
+        introHeader.style.display = 'none';
+      } else {
+        introHeader.style.display = 'block';
+      }
+
+      steps.forEach(step => {
+        step.classList.toggle('active', step.id === targetId);
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // If we just entered the loading step, run the loading sequence
+      if (stepKey === 'loading') {
+        runLoadingSequence();
+      }
+    }
+
+    document.querySelectorAll('.option-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const next = button.dataset.next;
+        goToStep(next);
+      });
+    });
+
+    function runLoadingSequence() {
+      const items = [
+        document.getElementById('load-1'),
+        document.getElementById('load-2'),
+        document.getElementById('load-3')
+      ];
+
+      // Reset all
+      items.forEach(item => {
+        item.classList.remove('processing', 'done');
+      });
+
+      // Sequence: each item processes for ~1.4s then marks as done
+      const stepDuration = 1400;
+
+      items.forEach((item, index) => {
+        setTimeout(() => {
+          item.classList.add('processing');
+        }, index * stepDuration);
+
+        setTimeout(() => {
+          item.classList.remove('processing');
+          item.classList.add('done');
+        }, (index + 1) * stepDuration);
+      });
+
+      // After all 3 items are done, advance to result
+      const totalDuration = items.length * stepDuration + 600;
+      setTimeout(() => {
+        goToStep('3');
+      }, totalDuration);
+    }
+
+    /* ===== GEO DETECTION: muestra el estado del usuario en el headline ===== */
+    const STATE_TRANSLATIONS = {
+      "Alabama": "Alabama",
+      "Alaska": "Alaska",
+      "Arizona": "Arizona",
+      "Arkansas": "Arkansas",
+      "California": "California",
+      "Colorado": "Colorado",
+      "Connecticut": "Connecticut",
+      "Delaware": "Delaware",
+      "Florida": "Florida",
+      "Georgia": "Georgia",
+      "Hawaii": "Hawái",
+      "Idaho": "Idaho",
+      "Illinois": "Illinois",
+      "Indiana": "Indiana",
+      "Iowa": "Iowa",
+      "Kansas": "Kansas",
+      "Kentucky": "Kentucky",
+      "Louisiana": "Luisiana",
+      "Maine": "Maine",
+      "Maryland": "Maryland",
+      "Massachusetts": "Massachusetts",
+      "Michigan": "Míchigan",
+      "Minnesota": "Minnesota",
+      "Mississippi": "Misisipi",
+      "Missouri": "Misuri",
+      "Montana": "Montana",
+      "Nebraska": "Nebraska",
+      "Nevada": "Nevada",
+      "New Hampshire": "Nuevo Hampshire",
+      "New Jersey": "Nueva Jersey",
+      "New Mexico": "Nuevo México",
+      "New York": "Nueva York",
+      "North Carolina": "Carolina del Norte",
+      "North Dakota": "Dakota del Norte",
+      "Ohio": "Ohio",
+      "Oklahoma": "Oklahoma",
+      "Oregon": "Oregón",
+      "Pennsylvania": "Pensilvania",
+      "Rhode Island": "Rhode Island",
+      "South Carolina": "Carolina del Sur",
+      "South Dakota": "Dakota del Sur",
+      "Tennessee": "Tennessee",
+      "Texas": "Texas",
+      "Utah": "Utah",
+      "Vermont": "Vermont",
+      "Virginia": "Virginia",
+      "Washington": "Washington",
+      "West Virginia": "Virginia Occidental",
+      "Wisconsin": "Wisconsin",
+      "Wyoming": "Wyoming",
+      "District of Columbia": "Washington D.C."
+    };
+
+    async function detectUserState() {
+      const stateEl = document.getElementById("state-name");
+      if (!stateEl) return;
+
+      // 1. Si ya lo detectamos en esta sesión, usa el cache
+      try {
+        const cached = sessionStorage.getItem("userState");
+        if (cached) {
+          stateEl.textContent = cached;
+          return;
+        }
+      } catch (e) {
+        // sessionStorage puede fallar en modo privado, seguimos sin cache
+      }
+
+      // 2. Detectar vía API
+      try {
+        const res = await fetch("https://ipwho.is/");
+        const data = await res.json();
+
+        if (data && data.success && data.country_code === "US" && data.region) {
+          const translated = STATE_TRANSLATIONS[data.region] || data.region;
+          stateEl.textContent = translated;
+
+          // Guardar en cache para no volver a llamar la API
+          try {
+            sessionStorage.setItem("userState", translated);
+          } catch (e) {}
+        } else {
+          stateEl.textContent = "EE.UU.";
+        }
+      } catch (error) {
+        stateEl.textContent = "EE.UU.";
+        console.log("Error detectando estado:", error);
+      }
+    }
+
+    detectUserState();
+  </script>
+</body>
+</html>
