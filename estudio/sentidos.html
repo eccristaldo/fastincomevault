@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuidados del Cuerpo — Los Sentidos</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --orange:  #FF6B35;
+  --orange2: #FF8C5A;
+  --blue:    #3A86FF;
+  --green:   #2DC653;
+  --red:     #E63946;
+  --yellow:  #FFD60A;
+  --purple:  #7B5EA7;
+  --bg:      #FFF8F0;
+  --white:   #FFFFFF;
+  --text:    #1A1A2E;
+  --muted:   #7A7A9A;
+  --border:  #EDE8E0;
+  --correct: #2DC653;
+  --wrong:   #E63946;
+  --r: 18px;
+  --shadow: 0 6px 24px rgba(255,107,53,0.13);
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 4rem;
+  background-image:
+    radial-gradient(circle at 5% 10%, rgba(255,107,53,0.08) 0%, transparent 40%),
+    radial-gradient(circle at 95% 90%, rgba(58,134,255,0.07) 0%, transparent 40%);
+}
+
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8C5A 50%, #FFB347 100%);
+  padding: 2.5rem 1.5rem 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50px; right: -50px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.10);
+}
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -30px; left: -30px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+}
+.header-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.20);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 999px;
+  margin-bottom: 0.9rem;
+}
+.header h1 {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  color: #fff;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.15);
+  margin-bottom: 0.3rem;
+  line-height: 1.1;
+}
+.header p { color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 700; }
+
+/* ── MAIN ── */
+.main {
+  max-width: 700px;
+  margin: -2.5rem auto 0;
+  padding: 0 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── PROGRESO ── */
+.prog-card {
+  background: var(--white);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.prog-info { flex: 1; }
+.prog-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 5px;
+}
+.prog-bar-bg {
+  height: 10px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.prog-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--orange), var(--orange2));
+  border-radius: 999px;
+  transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  width: 0%;
+}
+.prog-count {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.6rem;
+  color: var(--orange);
+  white-space: nowrap;
+}
+.score-chip {
+  background: #FFF3EC;
+  border: 1.5px solid #FFD4BC;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--orange);
+  white-space: nowrap;
+}
+
+/* ── QUESTION CARD ── */
+.q-card {
+  background: var(--white);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  padding: 1.75rem;
+  margin-bottom: 1.25rem;
+  animation: slideUp 0.35s ease;
+  border: 1.5px solid var(--border);
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.q-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+  border: 1.5px solid currentColor;
+}
+.q-num { font-size: 12px; font-weight: 800; color: var(--muted); margin-bottom: 0.5rem; }
+.q-text {
+  font-family: 'Fredoka One', cursive;
+  font-size: 19px;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 1.3rem;
+}
+
+/* ── OPTIONS ── */
+.options { display: flex; flex-direction: column; gap: 10px; }
+.opt-btn {
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 13px;
+  padding: 0.85rem 1.1rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.18s;
+}
+.opt-btn:hover:not(:disabled) {
+  border-color: var(--orange);
+  background: #FFF3EC;
+  transform: translateX(5px);
+}
+.opt-letra {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 900;
+  flex-shrink: 0;
+  transition: all 0.18s;
+}
+.opt-btn.correct {
+  background: #EAFAF1;
+  border-color: var(--correct);
+  color: #1A7A3C;
+}
+.opt-btn.correct .opt-letra { background: var(--correct); color: #fff; }
+.opt-btn.wrong {
+  background: #FEF0F0;
+  border-color: var(--wrong);
+  color: var(--wrong);
+}
+.opt-btn.wrong .opt-letra { background: var(--wrong); color: #fff; }
+.opt-btn:disabled { cursor: default; }
+
+/* ── FEEDBACK ── */
+.feedback {
+  margin-top: 1rem;
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.55;
+  display: none;
+  animation: pop 0.22s ease;
+}
+@keyframes pop { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+.feedback.show { display: block; }
+.feedback.ok  { background: #EAFAF1; border: 1.5px solid #A8E6C0; color: #1A7A3C; }
+.feedback.mal { background: #FEF0F0; border: 1.5px solid #F5AAAA; color: #9B1C1C; }
+
+/* ── BOTONES NAV ── */
+.nav-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.btn-reintentar {
+  background: #FFF3EC;
+  border: 2px solid #FFD4BC;
+  border-radius: 999px;
+  padding: 0.65rem 1.3rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--orange);
+  cursor: pointer;
+  display: none;
+  transition: all 0.15s;
+}
+.btn-reintentar:hover { background: #FFE8D6; }
+.btn-reintentar.show { display: inline-flex; align-items: center; gap: 6px; }
+
+.btn-anterior {
+  background: #F0F4FF;
+  border: 2px solid #C5D3FF;
+  border-radius: 999px;
+  padding: 0.65rem 1.3rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--blue);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: none;
+}
+.btn-anterior:hover { background: #E0E9FF; }
+.btn-anterior.show { display: inline-flex; align-items: center; gap: 6px; }
+
+.btn-siguiente {
+  background: linear-gradient(135deg, var(--orange), var(--orange2));
+  border: none;
+  border-radius: 999px;
+  padding: 0.7rem 1.6rem;
+  font-family: 'Fredoka One', cursive;
+  font-size: 15px;
+  color: #fff;
+  cursor: pointer;
+  display: none;
+  transition: all 0.18s;
+  box-shadow: 0 4px 16px rgba(255,107,53,0.3);
+  margin-left: auto;
+}
+.btn-siguiente:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,107,53,0.4); }
+.btn-siguiente.show { display: inline-flex; align-items: center; gap: 8px; }
+
+/* ── RESULTADO ── */
+.resultado {
+  display: none;
+  text-align: center;
+  animation: slideUp 0.4s ease;
+}
+.resultado.show { display: block; }
+.res-card {
+  background: var(--white);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  padding: 2.5rem 1.75rem;
+  border: 1.5px solid var(--border);
+  margin-bottom: 1.25rem;
+}
+.res-emoji { font-size: 5rem; display: block; margin-bottom: 1rem; }
+.res-titulo { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--text); margin-bottom: 0.4rem; }
+.res-score {
+  font-family: 'Fredoka One', cursive;
+  font-size: 4.5rem;
+  background: linear-gradient(135deg, var(--orange), var(--orange2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+.res-sub { font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 1.5rem; }
+
+.resumen-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+@media(max-width: 480px) { .resumen-grid { grid-template-columns: repeat(4, 1fr); } }
+.res-item {
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 10px 6px;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: center;
+  color: var(--muted);
+}
+.res-item .ri { font-size: 1.3rem; display: block; margin-bottom: 3px; }
+.res-item.ok2 { color: var(--correct); border: 1.5px solid #A8E6C0; background: #EAFAF1; }
+.res-item.no2 { color: var(--wrong);   border: 1.5px solid #F5AAAA; background: #FEF0F0; }
+
+.btn-empezar-de-nuevo {
+  background: linear-gradient(135deg, var(--orange), var(--orange2));
+  border: none;
+  border-radius: 999px;
+  padding: 0.9rem 2.2rem;
+  font-family: 'Fredoka One', cursive;
+  font-size: 17px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.18s;
+  box-shadow: 0 4px 16px rgba(255,107,53,0.3);
+}
+.btn-empezar-de-nuevo:hover { transform: translateY(-2px); }
+
+.footer-note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+  padding: 1.5rem 1rem 0;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">Unidad 1 · Módulo 2</div>
+  <h1>Cuidados del Cuerpo</h1>
+  <p>Los Sentidos · Quiz interactivo</p>
+</div>
+
+<div class="main">
+  <div class="prog-card">
+    <div class="prog-info">
+      <div class="prog-label">Tu progreso</div>
+      <div class="prog-bar-bg"><div class="prog-bar-fill" id="prog-fill"></div></div>
+    </div>
+    <div class="prog-count" id="prog-count">0/0</div>
+    <div class="score-chip" id="score-chip">⭐ 0</div>
+  </div>
+
+  <div id="quiz-area"></div>
+  <div class="resultado" id="resultado"></div>
+  <div class="footer-note">Ciencias Naturales · Cuidados del cuerpo</div>
+</div>
+
+<script>
+const PREGUNTAS = [
+  // ── LA VISTA ──
+  {
+    cat: 'La vista', emoji: '👁️', color: '#3A86FF',
+    q: '¿Cuántos sentidos tienen los seres humanos?',
+    opts: ['Tres', 'Cuatro', 'Cinco', 'Seis'],
+    c: 2,
+    exp: '✔ Los seres humanos tenemos cinco sentidos: vista, olfato, audición, gusto y tacto.'
+  },
+  {
+    cat: 'La vista', emoji: '👁️', color: '#3A86FF',
+    q: '¿Por qué los ojos son los órganos más importantes de los sentidos?',
+    opts: [
+      'Porque son los más grandes del cuerpo',
+      'Porque perciben la mayor cantidad de información del entorno',
+      'Porque pueden ver en la oscuridad',
+      'Porque nunca se cansan'
+    ],
+    c: 1,
+    exp: '✔ Los ojos son muy importantes porque perciben la mayor cantidad de información proveniente del medio que nos rodea.'
+  },
+  {
+    cat: 'La vista', emoji: '👁️', color: '#3A86FF',
+    q: '¿Qué partes del ojo puede dañar la luz directa del Sol?',
+    opts: ['El iris y la pupila', 'La retina y la córnea', 'El cristalino y el nervio óptico', 'El párpado y las pestañas'],
+    c: 1,
+    exp: '✔ La luz directa puede dañar la retina y la córnea. Por eso se recomienda usar anteojos de sol y gorros.'
+  },
+  {
+    cat: 'La vista', emoji: '👁️', color: '#3A86FF',
+    q: '¿Cuántas veces por minuto parpadean las personas en general?',
+    opts: ['Cinco veces', 'Diez veces', 'Veinte veces', 'Treinta veces'],
+    c: 1,
+    exp: '✔ En general, las personas parpadean diez veces por minuto, pero cuando miran fijamente se reduce a dos o tres veces.'
+  },
+  {
+    cat: 'La vista', emoji: '👁️', color: '#3A86FF',
+    q: '¿Qué se recomienda hacer cuando llevas mucho tiempo mirando la pantalla o leyendo?',
+    opts: [
+      'Cerrar los ojos y dormir',
+      'Ponerse anteojos de sol',
+      'Parar y mirar por 20 segundos algo a lo lejos',
+      'Lavarse los ojos con agua fría'
+    ],
+    c: 2,
+    exp: '✔ Se recomienda parar de vez en cuando y mirar por 20 segundos algo que esté a lo lejos para descansar los ojos.'
+  },
+  {
+    cat: 'La vista', emoji: '👁️', color: '#3A86FF',
+    q: '¿Cómo se deben limpiar los ojos si hay mucha suciedad?',
+    opts: [
+      'Con un hisopo de algodón',
+      'Con una toalla humedecida con agua tibia y, si es necesario, con productos indicados por un oculista',
+      'Frotándolos fuerte con las manos',
+      'Con agua fría directamente del grifo'
+    ],
+    c: 1,
+    exp: '✔ Se pueden limpiar con una toalla humedecida con agua tibia y, de ser necesario, con productos indicados por un oculista.'
+  },
+  {
+    cat: 'La vista', emoji: '👁️', color: '#3A86FF',
+    q: '¿Qué puede causar una infección ocular?',
+    opts: [
+      'Mirar mucho tiempo la televisión',
+      'Virus, bacterias, alergias o algo que entre al ojo y lo irrite',
+      'No dormir suficiente',
+      'Comer alimentos sin lavar'
+    ],
+    c: 1,
+    exp: '✔ Las infecciones oculares son causadas por virus, bacterias, alergias o algo que entra en el ojo y lo irrita.'
+  },
+  {
+    cat: 'La vista', emoji: '👁️', color: '#3A86FF',
+    q: '¿Para qué sirven los anteojos?',
+    opts: [
+      'Solo para proteger del sol',
+      'Cuentan con lentes especiales que imitan la lente natural del ojo y corrigen defectos',
+      'Para ver de noche',
+      'Para evitar infecciones'
+    ],
+    c: 1,
+    exp: '✔ Los anteojos cuentan con lentes especiales que imitan la lente natural de cada ojo y corrigen defectos que puedan aparecer en ella.'
+  },
+  {
+    cat: 'Problemas vista', emoji: '🩺', color: '#7B5EA7',
+    q: '¿Cuál de estos NO es un signo de que debes ir al oftalmólogo?',
+    opts: [
+      'Visión borrosa',
+      'Dolores de cabeza frecuentes',
+      'Confusión al leer',
+      'Hambre frecuente'
+    ],
+    c: 3,
+    exp: '✔ Los signos para visitar al oftalmólogo son: visión borrosa, dolores de cabeza frecuentes, confusión al leer y cansancio al leer con lagrimeo. El hambre no es uno de ellos.'
+  },
+  {
+    cat: 'Problemas vista', emoji: '🩺', color: '#7B5EA7',
+    q: '¿Qué significa tener "visión borrosa"?',
+    opts: [
+      'Ver los colores diferente',
+      'Las palabras e imágenes no se ven nítidas',
+      'Ver doble',
+      'Ver solo de noche'
+    ],
+    c: 1,
+    exp: '✔ La visión borrosa significa que las palabras e imágenes no se ven nítidas.'
+  },
+
+  // ── LA AUDICIÓN ──
+  {
+    cat: 'La audición', emoji: '👂', color: '#FF6B35',
+    q: '¿Por qué NO es necesario limpiar los oídos con demasiada frecuencia?',
+    opts: [
+      'Porque el oído se limpia solo por las noches',
+      'Porque la cera evita el ingreso de microorganismos y polvo',
+      'Porque la cera mejora la audición',
+      'Porque el agua los limpia sola'
+    ],
+    c: 1,
+    exp: '✔ No es necesario limpiarlos con demasiada frecuencia, pues la cera que se forma evita el ingreso de microorganismos y polvo que pueden causar infecciones.'
+  },
+  {
+    cat: 'La audición', emoji: '👂', color: '#FF6B35',
+    q: '¿Por qué los hisopos NO son aconsejables para limpiar los oídos?',
+    opts: [
+      'Porque son demasiado grandes',
+      'Porque pueden perforar el tímpano, causar mucho dolor y hasta provocar sordera',
+      'Porque empujan la cera hacia adentro únicamente',
+      'Porque son muy costosos'
+    ],
+    c: 1,
+    exp: '✔ Los hisopos no son aconsejables ya que pueden perforar el tímpano, causar muchísimo dolor y hasta provocar sordera.'
+  },
+  {
+    cat: 'La audición', emoji: '👂', color: '#FF6B35',
+    q: '¿Qué se recomienda hacer al escuchar música con auriculares?',
+    opts: [
+      'Escucharla solo 5 minutos',
+      'Mantener el volumen bajo',
+      'Usar un solo auricular',
+      'Solo escuchar música clásica'
+    ],
+    c: 1,
+    exp: '✔ Los ruidos muy fuertes suelen causar problemas, por eso se sugiere mantener el volumen bajo cuando se escucha música con auriculares.'
+  },
+  {
+    cat: 'La audición', emoji: '👂', color: '#FF6B35',
+    q: '¿Con qué especialista debes consultar si sientes alguna molestia en los oídos?',
+    opts: ['El oculista', 'El dermatólogo', 'El otorrinolaringólogo', 'El cardiólogo'],
+    c: 2,
+    exp: '✔ Es recomendable consultar con el especialista en oídos, el otorrinolaringólogo, cuando se siente alguna molestia.'
+  },
+
+  // ── EL GUSTO Y EL OLFATO ──
+  {
+    cat: 'Gusto y olfato', emoji: '👅', color: '#2DC653',
+    q: '¿De qué manera nos protegen el gusto y el olfato?',
+    opts: [
+      'Nos avisan cuando hay peligro de caída',
+      'Al percibir gusto u olor desagradable de un alimento, sabemos que está descompuesto',
+      'Nos protegen del frío y el calor',
+      'Nos ayudan a ver mejor en la oscuridad'
+    ],
+    c: 1,
+    exp: '✔ El gusto y el olfato nos protegen: al percibir el gusto y olor desagradables de un alimento, podemos saber que está descompuesto y así evitar ingerirlo.'
+  },
+  {
+    cat: 'Gusto y olfato', emoji: '👅', color: '#2DC653',
+    q: '¿Qué otros peligros puede detectar el olfato además de los alimentos en mal estado?',
+    opts: [
+      'La temperatura del agua',
+      'Una fuga de gas o si algo se está quemando',
+      'La proximidad de una tormenta',
+      'El nivel de ruido del ambiente'
+    ],
+    c: 1,
+    exp: '✔ El olfato también nos avisa cuando hay una fuga de gas o si algo se está quemando.'
+  },
+  {
+    cat: 'Gusto y olfato', emoji: '👅', color: '#2DC653',
+    q: '¿Cuáles son los sabores que las papilas gustativas envían al cerebro?',
+    opts: [
+      'Dulce y salado únicamente',
+      'Dulce, salado, ácido y amargo',
+      'Dulce, salado, picante y ácido',
+      'Solo amargo y ácido'
+    ],
+    c: 1,
+    exp: '✔ Las papilas gustativas de la lengua tienen pelitos o cilios que envían al cerebro mensajes sobre los sabores: dulce, salado, ácido y amargo.'
+  },
+  {
+    cat: 'Gusto y olfato', emoji: '👅', color: '#2DC653',
+    q: '¿Qué ocurre con el sabor de la comida cuando estás resfriado y tienes la nariz tapada?',
+    opts: [
+      'Sientes los sabores más fuertes',
+      'Solo sientes el sabor dulce',
+      'Sientes mucho menos el sabor de lo que comes',
+      'No cambia nada'
+    ],
+    c: 2,
+    exp: '✔ Si estás resfriado y con la nariz tapada, sientes mucho menos el sabor de lo que comes. Por eso es necesario mantener la nariz descongestionada y limpia.'
+  },
+  {
+    cat: 'Gusto y olfato', emoji: '👅', color: '#2DC653',
+    q: '¿Dónde están los receptores olfativos?',
+    opts: [
+      'En la parte inferior de la nariz',
+      'En la garganta',
+      'En la parte superior del interior de la nariz',
+      'En la lengua'
+    ],
+    c: 2,
+    exp: '✔ Cuando masticas, la comida libera sustancias químicas que llegan a los receptores olfativos que están en la parte superior del interior de la nariz.'
+  },
+  {
+    cat: 'Gusto y olfato', emoji: '👅', color: '#2DC653',
+    q: '¿Cuáles son dos formas de cuidar la lengua?',
+    opts: [
+      'Lavarla con jabón y evitar comer',
+      'Cepillarla al cepillarse los dientes y evitar alimentos extremadamente calientes',
+      'Enjuagarla con agua fría y comer frutas',
+      'Evitar el dulce y cepillarla con sal'
+    ],
+    c: 1,
+    exp: '✔ Cepillarse la lengua al cepillar los dientes y evitar los alimentos extremadamente calientes son dos maneras de mantenerla en forma.'
+  },
+
+  // ── EL TACTO ──
+  {
+    cat: 'El tacto', emoji: '🖐️', color: '#7B5EA7',
+    q: '¿Cuál es el órgano más grande del cuerpo humano?',
+    opts: ['El hígado', 'El intestino delgado', 'La piel', 'El corazón'],
+    c: 2,
+    exp: '✔ La piel es un órgano, el más grande, y además uno muy importante pues protege nuestro cuerpo y permite el sentido del tacto.'
+  },
+  {
+    cat: 'El tacto', emoji: '🖐️', color: '#7B5EA7',
+    q: '¿Cuál de las tres capas de la piel es la que se ve?',
+    opts: ['La dermis', 'La grasa subcutánea', 'La epidermis', 'El folículo'],
+    c: 2,
+    exp: '✔ La epidermis es la parte más externa de la piel, la que se ve.'
+  },
+  {
+    cat: 'El tacto', emoji: '🖐️', color: '#7B5EA7',
+    q: '¿Qué contiene la dermis que envía información al cerebro?',
+    opts: ['Grasa y folículos', 'Terminaciones nerviosas', 'Cloroplastos', 'Papilas gustativas'],
+    c: 1,
+    exp: '✔ La dermis contiene terminaciones nerviosas que envían al cerebro información sobre lo que tocamos: si es suave o áspero, rugoso o liso, caliente o frío.'
+  },
+  {
+    cat: 'El tacto', emoji: '🖐️', color: '#7B5EA7',
+    q: '¿Para qué sirve la grasa subcutánea?',
+    opts: [
+      'Para producir sudor',
+      'Para enviar señales al cerebro',
+      'Para mantener la temperatura del cuerpo y servir de protección',
+      'Para producir células nuevas'
+    ],
+    c: 2,
+    exp: '✔ La grasa subcutánea permite mantener la temperatura del cuerpo y sirve de protección. En esta capa está la raíz del pelo, que crece a través de un folículo.'
+  },
+  {
+    cat: 'El tacto', emoji: '🖐️', color: '#7B5EA7',
+    q: '¿Qué debes hacer con una herida o raspadura para evitar infecciones?',
+    opts: [
+      'Dejarla al aire libre',
+      'Cubrirla con una curita o gasa para que no penetren impurezas',
+      'Lavarla con alcohol puro',
+      'Aplicarle pasta de dientes'
+    ],
+    c: 1,
+    exp: '✔ Es importante cubrir las heridas o raspaduras con una curita o gasa, para que no penetren las impurezas que puedan provocar infecciones.'
+  },
+];
+
+// ── ESTADO ──
+let actual = 0;
+let puntaje = 0;
+let historial = []; // {respondido: bool, seleccion: int|null, correcta: bool}
+let respondido = false;
+
+function initHistorial() {
+  historial = PREGUNTAS.map(() => ({ respondido: false, seleccion: null, correcta: false }));
+}
+
+function render() {
+  if (actual >= PREGUNTAS.length) { mostrarResultado(); return; }
+
+  const p = PREGUNTAS[actual];
+  const h = historial[actual];
+  const pct = Math.round((actual / PREGUNTAS.length) * 100);
+
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-count').textContent = `${actual + 1}/${PREGUNTAS.length}`;
+  document.getElementById('score-chip').textContent = `⭐ ${puntaje}`;
+
+  const letras = ['A','B','C','D'];
+  const optsHTML = p.opts.map((o, i) => {
+    let cls = '';
+    if (h.respondido) {
+      if (i === p.c) cls = ' correct';
+      else if (i === h.seleccion && i !== p.c) cls = ' wrong';
+    }
+    return `<button class="opt-btn${cls}" onclick="responder(${i})" id="opt-${i}" ${h.respondido ? 'disabled' : ''}>
+      <span class="opt-letra">${letras[i]}</span>${o}
+    </button>`;
+  }).join('');
+
+  const feedbackHTML = h.respondido
+    ? `<div class="feedback show ${h.correcta ? 'ok' : 'mal'}">${h.correcta ? '🎉 ¡Muy bien! ' : '❌ Casi. La respuesta correcta era: <strong>' + p.opts[p.c] + '</strong><br>'}${p.exp}</div>`
+    : `<div class="feedback" id="feedback"></div>`;
+
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="q-card">
+      <div style="margin-bottom:0.6rem;">
+        <span class="q-cat" style="color:${p.color};border-color:${p.color}44;background:${p.color}10;">
+          ${p.emoji} ${p.cat}
+        </span>
+      </div>
+      <div class="q-num">Pregunta ${actual + 1} de ${PREGUNTAS.length}</div>
+      <div class="q-text">${p.q}</div>
+      <div class="options">${optsHTML}</div>
+      ${feedbackHTML}
+      <div class="nav-row">
+        <button class="btn-anterior ${actual > 0 ? 'show' : ''}" onclick="irAnterior()">← Anterior</button>
+        <button class="btn-reintentar ${h.respondido && !h.correcta ? 'show' : ''}" onclick="reintentar()">🔄 Reintentar</button>
+        <button class="btn-siguiente ${h.respondido ? 'show' : ''}" onclick="siguiente()">
+          ${actual + 1 < PREGUNTAS.length ? 'Siguiente →' : 'Ver resultados 🏁'}
+        </button>
+      </div>
+    </div>`;
+
+  respondido = h.respondido;
+}
+
+function responder(idx) {
+  if (respondido) return;
+  respondido = true;
+  const p = PREGUNTAS[actual];
+  const h = historial[actual];
+  const esOk = idx === p.c;
+
+  h.respondido = true;
+  h.seleccion = idx;
+  h.correcta = esOk;
+  if (esOk) puntaje++;
+
+  document.getElementById('score-chip').textContent = `⭐ ${puntaje}`;
+  document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+  document.getElementById(`opt-${idx}`).classList.add(esOk ? 'correct' : 'wrong');
+  if (!esOk) document.getElementById(`opt-${p.c}`).classList.add('correct');
+
+  const fb = document.getElementById('feedback');
+  fb.className = `feedback show ${esOk ? 'ok' : 'mal'}`;
+  fb.innerHTML = esOk
+    ? `🎉 ¡Muy bien! ${p.exp}`
+    : `❌ Casi. La respuesta correcta era: <strong>${p.opts[p.c]}</strong><br>${p.exp}`;
+
+  // mostrar botones
+  const navRow = document.querySelector('.nav-row');
+  if (actual > 0) navRow.querySelector('.btn-anterior').classList.add('show');
+  if (!esOk) navRow.querySelector('.btn-reintentar').classList.add('show');
+  navRow.querySelector('.btn-siguiente').classList.add('show');
+}
+
+function reintentar() {
+  const h = historial[actual];
+  if (h.correcta) return;
+  // Descontar el punto si ya había acertado en reintento previo (no aplica aquí porque solo se puede si fue incorrecto)
+  h.respondido = false;
+  h.seleccion = null;
+  h.correcta = false;
+  respondido = false;
+  render();
+}
+
+function siguiente() {
+  actual++;
+  render();
+}
+
+function irAnterior() {
+  if (actual > 0) {
+    actual--;
+    render();
+  }
+}
+
+function mostrarResultado() {
+  document.getElementById('prog-fill').style.width = '100%';
+  document.getElementById('prog-count').textContent = `${PREGUNTAS.length}/${PREGUNTAS.length}`;
+  document.getElementById('quiz-area').innerHTML = '';
+
+  const total = PREGUNTAS.length;
+  const pct = Math.round((puntaje / total) * 100);
+  const [emoji, msg] =
+    pct === 100 ? ['🏆', '¡Perfecto! ¡Lo sabés todo!'] :
+    pct >= 80   ? ['🌟', '¡Excelente! ¡Casi perfecto!'] :
+    pct >= 60   ? ['😊', '¡Bien hecho! Repasá un poco más.'] :
+                  ['💪', '¡Seguí practicando, vos podés!'];
+
+  const resumen = historial.map((h, i) =>
+    `<div class="res-item ${h.correcta ? 'ok2' : 'no2'}">
+      <span class="ri">${h.correcta ? '✅' : '❌'}</span>P${i + 1}
+    </div>`).join('');
+
+  const res = document.getElementById('resultado');
+  res.innerHTML = `
+    <div class="res-card">
+      <span class="res-emoji">${emoji}</span>
+      <div class="res-titulo">${msg}</div>
+      <div class="res-score">${puntaje}/${total}</div>
+      <div class="res-sub">Respondiste correctamente el <strong>${pct}%</strong> de las preguntas.</div>
+      <div class="resumen-grid">${resumen}</div>
+      <button class="btn-empezar-de-nuevo" onclick="reiniciar()">🔄 Empezar de nuevo</button>
+    </div>`;
+  res.classList.add('show');
+}
+
+function reiniciar() {
+  actual = 0;
+  puntaje = 0;
+  respondido = false;
+  initHistorial();
+  document.getElementById('resultado').classList.remove('show');
+  document.getElementById('resultado').innerHTML = '';
+  render();
+}
+
+initHistorial();
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ambiente Saludable — Quiz Interactivo</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green:   #27AE60;
+  --green2:  #2ECC71;
+  --teal:    #1ABC9C;
+  --blue:    #2980B9;
+  --blue2:   #3498DB;
+  --yellow:  #F1C40F;
+  --red:     #E74C3C;
+  --bg:      #F0FBF4;
+  --white:   #FFFFFF;
+  --text:    #1A2E1A;
+  --muted:   #6A8A6A;
+  --border:  #D5EDD9;
+  --correct: #27AE60;
+  --wrong:   #E74C3C;
+  --r: 18px;
+  --shadow: 0 6px 24px rgba(39,174,96,0.12);
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 4rem;
+  background-image:
+    radial-gradient(circle at 5% 10%, rgba(39,174,96,0.09) 0%, transparent 40%),
+    radial-gradient(circle at 95% 85%, rgba(26,188,156,0.07) 0%, transparent 40%);
+}
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, #27AE60 0%, #2ECC71 55%, #1ABC9C 100%);
+  padding: 2.5rem 1.5rem 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute; top: -50px; right: -50px;
+  width: 180px; height: 180px; border-radius: 50%;
+  background: rgba(255,255,255,0.10);
+}
+.header::after {
+  content: '';
+  position: absolute; bottom: -30px; left: -30px;
+  width: 120px; height: 120px; border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+}
+.header-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.20);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: #fff; font-size: 11px; font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 4px 14px; border-radius: 999px; margin-bottom: 0.9rem;
+}
+.header h1 {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  color: #fff;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.15);
+  margin-bottom: 0.3rem; line-height: 1.1;
+}
+.header p { color: rgba(255,255,255,0.88); font-size: 14px; font-weight: 700; }
+
+/* MAIN */
+.main {
+  max-width: 700px; margin: -2.5rem auto 0;
+  padding: 0 1.25rem; position: relative; z-index: 1;
+}
+
+/* PROGRESO */
+.prog-card {
+  background: var(--white); border-radius: var(--r);
+  box-shadow: var(--shadow); padding: 1.1rem 1.4rem;
+  margin-bottom: 1.25rem; display: flex; align-items: center; gap: 1rem;
+}
+.prog-info { flex: 1; }
+.prog-label {
+  font-size: 11px; font-weight: 800; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px;
+}
+.prog-bar-bg { height: 10px; background: var(--border); border-radius: 999px; overflow: hidden; }
+.prog-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green), var(--teal));
+  border-radius: 999px;
+  transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  width: 0%;
+}
+.prog-count { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--green); white-space: nowrap; }
+.score-chip {
+  background: #EAFAF1; border: 1.5px solid #A9DFBF;
+  border-radius: 999px; padding: 4px 12px;
+  font-size: 13px; font-weight: 800; color: var(--green); white-space: nowrap;
+}
+
+/* QUESTION CARD */
+.q-card {
+  background: var(--white); border-radius: var(--r);
+  box-shadow: var(--shadow); padding: 1.75rem;
+  margin-bottom: 1.25rem; animation: slideUp 0.35s ease;
+  border: 1.5px solid var(--border);
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.q-cat {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 800; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 4px 12px;
+  border-radius: 999px; margin-bottom: 1rem;
+  border: 1.5px solid currentColor;
+}
+.q-num { font-size: 12px; font-weight: 800; color: var(--muted); margin-bottom: 0.5rem; }
+.q-text {
+  font-family: 'Fredoka One', cursive; font-size: 19px;
+  color: var(--text); line-height: 1.4; margin-bottom: 1.3rem;
+}
+
+/* OPTIONS */
+.options { display: flex; flex-direction: column; gap: 10px; }
+.opt-btn {
+  background: var(--bg); border: 2px solid var(--border);
+  border-radius: 13px; padding: 0.85rem 1.1rem;
+  font-family: 'Nunito', sans-serif; font-size: 15px;
+  font-weight: 700; color: var(--text); cursor: pointer;
+  text-align: left; display: flex; align-items: center;
+  gap: 12px; transition: all 0.18s;
+}
+.opt-btn:hover:not(:disabled) {
+  border-color: var(--green); background: #EAFAF1;
+  transform: translateX(5px);
+}
+.opt-letra {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--border); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 900; flex-shrink: 0; transition: all 0.18s;
+}
+.opt-btn.correct { background: #EAFAF1; border-color: var(--correct); color: #1A7A3C; }
+.opt-btn.correct .opt-letra { background: var(--correct); color: #fff; }
+.opt-btn.wrong { background: #FDEDEC; border-color: var(--wrong); color: var(--wrong); }
+.opt-btn.wrong .opt-letra { background: var(--wrong); color: #fff; }
+.opt-btn:disabled { cursor: default; }
+
+/* FEEDBACK */
+.feedback {
+  margin-top: 1rem; border-radius: 12px; padding: 0.9rem 1.1rem;
+  font-size: 14px; font-weight: 700; line-height: 1.55;
+  display: none; animation: pop 0.22s ease;
+}
+@keyframes pop { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+.feedback.show { display: block; }
+.feedback.ok  { background: #EAFAF1; border: 1.5px solid #A9DFBF; color: #1A7A3C; }
+.feedback.mal { background: #FDEDEC; border: 1.5px solid #F1948A; color: #922B21; }
+
+/* NAV */
+.nav-row { display: flex; gap: 10px; margin-top: 1rem; flex-wrap: wrap; }
+.btn-reintentar {
+  background: #EAFAF1; border: 2px solid #A9DFBF;
+  border-radius: 999px; padding: 0.65rem 1.3rem;
+  font-family: 'Nunito', sans-serif; font-size: 13px;
+  font-weight: 800; color: var(--green); cursor: pointer;
+  display: none; transition: all 0.15s;
+}
+.btn-reintentar:hover { background: #D5F5E3; }
+.btn-reintentar.show { display: inline-flex; align-items: center; gap: 6px; }
+
+.btn-anterior {
+  background: #EBF5FB; border: 2px solid #AED6F1;
+  border-radius: 999px; padding: 0.65rem 1.3rem;
+  font-family: 'Nunito', sans-serif; font-size: 13px;
+  font-weight: 800; color: var(--blue); cursor: pointer;
+  display: none; transition: all 0.15s;
+}
+.btn-anterior:hover { background: #D6EAF8; }
+.btn-anterior.show { display: inline-flex; align-items: center; gap: 6px; }
+
+.btn-siguiente {
+  background: linear-gradient(135deg, var(--green), var(--teal));
+  border: none; border-radius: 999px; padding: 0.7rem 1.6rem;
+  font-family: 'Fredoka One', cursive; font-size: 15px; color: #fff;
+  cursor: pointer; display: none; transition: all 0.18s;
+  box-shadow: 0 4px 16px rgba(39,174,96,0.28); margin-left: auto;
+}
+.btn-siguiente:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(39,174,96,0.38); }
+.btn-siguiente.show { display: inline-flex; align-items: center; gap: 8px; }
+
+/* RESULTADO */
+.resultado { display: none; text-align: center; animation: slideUp 0.4s ease; }
+.resultado.show { display: block; }
+.res-card {
+  background: var(--white); border-radius: var(--r);
+  box-shadow: var(--shadow); padding: 2.5rem 1.75rem;
+  border: 1.5px solid var(--border); margin-bottom: 1.25rem;
+}
+.res-emoji { font-size: 5rem; display: block; margin-bottom: 1rem; }
+.res-titulo { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--text); margin-bottom: 0.4rem; }
+.res-score {
+  font-family: 'Fredoka One', cursive; font-size: 4.5rem;
+  background: linear-gradient(135deg, var(--green), var(--teal));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; line-height: 1; margin-bottom: 0.25rem;
+}
+.res-sub { font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 1.5rem; }
+.resumen-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 8px; margin-bottom: 1.5rem;
+}
+@media(max-width: 480px) { .resumen-grid { grid-template-columns: repeat(4, 1fr); } }
+.res-item {
+  background: var(--bg); border-radius: 10px; padding: 10px 6px;
+  font-size: 11px; font-weight: 800; text-align: center; color: var(--muted);
+}
+.res-item .ri { font-size: 1.3rem; display: block; margin-bottom: 3px; }
+.res-item.ok2 { color: var(--correct); border: 1.5px solid #A9DFBF; background: #EAFAF1; }
+.res-item.no2 { color: var(--wrong);   border: 1.5px solid #F1948A; background: #FDEDEC; }
+
+.btn-nuevo {
+  background: linear-gradient(135deg, var(--green), var(--teal));
+  border: none; border-radius: 999px; padding: 0.9rem 2.2rem;
+  font-family: 'Fredoka One', cursive; font-size: 17px; color: #fff;
+  cursor: pointer; transition: all 0.18s;
+  box-shadow: 0 4px 16px rgba(39,174,96,0.28);
+}
+.btn-nuevo:hover { transform: translateY(-2px); }
+.footer-note { text-align: center; font-size: 12px; color: var(--muted); font-weight: 700; padding: 1.5rem 1rem 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">Unidad 1 · Módulo 3</div>
+  <h1>Ambiente Saludable</h1>
+  <p>La basura · El reciclaje · El agua potable · Quiz interactivo</p>
+</div>
+
+<div class="main">
+  <div class="prog-card">
+    <div class="prog-info">
+      <div class="prog-label">Tu progreso</div>
+      <div class="prog-bar-bg"><div class="prog-bar-fill" id="prog-fill"></div></div>
+    </div>
+    <div class="prog-count" id="prog-count">0/0</div>
+    <div class="score-chip" id="score-chip">⭐ 0</div>
+  </div>
+
+  <div id="quiz-area"></div>
+  <div class="resultado" id="resultado"></div>
+  <div class="footer-note">Ciencias Naturales · Ambiente Saludable · Unidad 1 Módulo 3</div>
+</div>
+
+<script>
+const PREGUNTAS = [
+  // ── LA BASURA ──
+  {
+    cat:'La basura', emoji:'🗑️', color:'#7D3C98',
+    q:'¿Qué es la basura?',
+    opts:['Los objetos viejos que guardamos','Los desperdicios o desechos que hay que eliminar','Solo la comida que se tira','La suciedad de los ríos'],
+    c:1,
+    exp:'✔ La basura son los desperdicios o desechos que se deben eliminar.'
+  },
+  {
+    cat:'La basura', emoji:'🗑️', color:'#7D3C98',
+    q:'¿Qué pasa cuando la basura se acumula?',
+    opts:[
+      'Solo produce mal olor',
+      'Afea el paisaje, produce malos olores y favorece enfermedades',
+      'Solo afea el paisaje',
+      'No pasa nada importante'
+    ],
+    c:1,
+    exp:'✔ Cuando la basura se acumula afea el paisaje, expide olores desagradables y favorece microorganismos que causan enfermedades.'
+  },
+
+  // ── CLASES DE RESIDUOS ──
+  {
+    cat:'Clases de residuos', emoji:'♻️', color:'#27AE60',
+    q:'¿De dónde vienen los residuos domiciliarios?',
+    opts:['De hospitales','De fábricas','De las casas, comercios y oficinas','De calles y parques'],
+    c:2,
+    exp:'✔ Los residuos domiciliarios provienen de las casas, los comercios y las oficinas.'
+  },
+  {
+    cat:'Clases de residuos', emoji:'♻️', color:'#27AE60',
+    q:'¿Cómo se llaman los residuos de la limpieza de calles y plazas?',
+    opts:['Domiciliarios','Industriales','Hospitalarios','Callejeros'],
+    c:3,
+    exp:'✔ Los residuos callejeros se producen por la limpieza de calles, plazas, parques y áreas públicas.'
+  },
+  {
+    cat:'Clases de residuos', emoji:'♻️', color:'#27AE60',
+    q:'¿Qué residuos producen los hospitales y clínicas?',
+    opts:['Domiciliarios','Callejeros','Hospitalarios','Industriales'],
+    c:2,
+    exp:'✔ Los hospitales, clínicas y sanatorios producen residuos hospitalarios.'
+  },
+  {
+    cat:'Clases de residuos', emoji:'♻️', color:'#27AE60',
+    q:'¿Por qué los residuos industriales y hospitalarios se eliminan diferente a la basura de casa?',
+    opts:[
+      'Porque pesan más',
+      'Porque necesitan tratamientos especiales distintos a la basura domiciliaria',
+      'Porque son más grandes',
+      'Porque huelen diferente'
+    ],
+    c:1,
+    exp:'✔ Los residuos industriales y hospitalarios deben ser eliminados con tratamientos diferentes a los utilizados con la basura domiciliaria.'
+  },
+
+  // ── PROCESO DE ELIMINACIÓN ──
+  {
+    cat:'¿Qué hacemos con la basura?', emoji:'🚛', color:'#E67E22',
+    q:'¿A dónde lleva la basura el camión recolector?',
+    opts:['A una fábrica de reciclaje','A un río','Al vertedero municipal','A un parque'],
+    c:2,
+    exp:'✔ El camión recolector lleva la basura al vertedero municipal.'
+  },
+
+  // ── MÉTODOS DE ELIMINACIÓN ──
+  {
+    cat:'Métodos de eliminación', emoji:'🔥', color:'#E74C3C',
+    q:'¿En qué consiste la incineración?',
+    opts:[
+      'En enterrar la basura en pozos',
+      'En quemar los residuos a altas temperaturas',
+      'En separar la basura para reciclar',
+      'En compactar la basura'
+    ],
+    c:1,
+    exp:'✔ La incineración consiste en quemar los residuos a altas temperaturas.'
+  },
+  {
+    cat:'Métodos de eliminación', emoji:'🔥', color:'#E74C3C',
+    q:'¿Cuál es una desventaja de la incineración?',
+    opts:[
+      'Ocupa mucho terreno',
+      'No produce calor',
+      'Libera gases tóxicos y partículas que pueden causar enfermedades respiratorias',
+      'No elimina la basura'
+    ],
+    c:2,
+    exp:'✔ La incineración libera gases tóxicos y partículas sólidas (hollín y cenizas) que pueden causar enfermedades respiratorias.'
+  },
+  {
+    cat:'Métodos de eliminación', emoji:'🏗️', color:'#7D3C98',
+    q:'¿Qué es un relleno sanitario?',
+    opts:[
+      'Una fábrica que quema basura',
+      'Un lugar donde se deposita la basura en pozos en el suelo cubiertos con tierra',
+      'Un centro de reciclaje',
+      'Una planta de agua potable'
+    ],
+    c:1,
+    exp:'✔ El relleno sanitario es un lugar donde se deposita la basura en pozos excavados en el suelo, que se cubren con tierra.'
+  },
+  {
+    cat:'Métodos de eliminación', emoji:'🏗️', color:'#7D3C98',
+    q:'¿En qué se pueden convertir los rellenos sanitarios con el tiempo?',
+    opts:['En fábricas','En vertederos más grandes','En espacios para viviendas y parques','En plantas de incineración'],
+    c:2,
+    exp:'✔ Los lugares de relleno sanitario se pueden convertir, con el tiempo, en espacios para viviendas y parques.'
+  },
+
+  // ── EL RECICLAJE ──
+  {
+    cat:'El reciclaje', emoji:'♻️', color:'#1ABC9C',
+    q:'¿Qué es el reciclaje?',
+    opts:[
+      'Quemar residuos para producir energía',
+      'Transformar productos en desuso en materia prima para fabricar nuevos materiales',
+      'Enterrar la basura en el suelo',
+      'Reducir el consumo de productos'
+    ],
+    c:1,
+    exp:'✔ El reciclaje transforma los productos en desuso en materia prima para fabricar nuevos materiales.'
+  },
+  {
+    cat:'El reciclaje', emoji:'♻️', color:'#1ABC9C',
+    q:'¿Cómo ayuda el reciclaje al medioambiente?',
+    opts:[
+      'Elimina toda la basura',
+      'Usa menos recursos naturales, reduce energía y disminuye la contaminación',
+      'Solo produce energía limpia',
+      'Solo reduce el tamaño de la basura'
+    ],
+    c:1,
+    exp:'✔ El reciclaje lleva a usar menos recursos naturales, reducir el uso de energía y disminuir la contaminación.'
+  },
+
+  // ── HÁBITOS DE HIGIENE ──
+  {
+    cat:'Hábitos de higiene', emoji:'🦷', color:'#2980B9',
+    q:'¿Para qué sirve lavarse las manos con jabón?',
+    opts:['Para tener la piel suave','Para no tener infecciones','Para mejorar el tacto','Para evitar el cansancio'],
+    c:1,
+    exp:'✔ Lavarse las manos con jabón ayuda a no tener infecciones.'
+  },
+
+  // ── EL AGUA POTABLE ──
+  {
+    cat:'El agua potable', emoji:'💧', color:'#2980B9',
+    q:'¿De dónde viene el agua que usamos en casa?',
+    opts:['De un depósito subterráneo','Del mar filtrada','Del río, luego de un proceso de potabilización','De la lluvia'],
+    c:2,
+    exp:'✔ El agua proviene del río y antes de llegar a tu hogar pasa por un proceso de potabilización.'
+  },
+  {
+    cat:'El agua potable', emoji:'💧', color:'#2980B9',
+    q:'¿Para qué sirve la reja al inicio del proceso de potabilización?',
+    opts:[
+      'Para agregar cloro',
+      'Para impedir el paso de elementos grandes como ramas y troncos',
+      'Para filtrar impurezas pequeñas',
+      'Para almacenar el agua'
+    ],
+    c:1,
+    exp:'✔ La reja impide el paso de elementos grandes como ramas y troncos en el punto de captación.'
+  },
+  {
+    cat:'El agua potable', emoji:'💧', color:'#2980B9',
+    q:'¿Para qué se le agrega cloro al agua durante la potabilización?',
+    opts:['Para darle sabor','Para enfriarla','Para limpiarla y eliminar bacterias','Para colorearla'],
+    c:2,
+    exp:'✔ Se agrega cloro y otros productos químicos para limpiar el agua y eliminar bacterias.'
+  },
+  {
+    cat:'El agua potable', emoji:'💧', color:'#2980B9',
+    q:'¿Cuáles son las cuatro características del agua potable?',
+    opts:[
+      'Fría, limpia, sin gas y sin color',
+      'Incolora, insípida, inodora y libre de microorganismos',
+      'Clara, sin sabor, fría y con flúor',
+      'Sin color, con cloro, fría y sin bacterias'
+    ],
+    c:1,
+    exp:'✔ El agua potable es incolora (sin color), insípida (sin sabor), inodora (sin olor) y libre de microorganismos.'
+  },
+  {
+    cat:'El agua potable', emoji:'💧', color:'#2980B9',
+    q:'¿A dónde va el agua usada en las casas?',
+    opts:[
+      'A una planta de reciclaje',
+      'Al vertedero municipal',
+      'Por la red de alcantarillado hasta el río',
+      'A un estanque subterráneo'
+    ],
+    c:2,
+    exp:'✔ El agua usada sale por la red de alcantarillado y va nuevamente al río.'
+  },
+  {
+    cat:'El agua potable', emoji:'💧', color:'#2980B9',
+    q:'¿Cuál de estas afirmaciones es CORRECTA?',
+    opts:[
+      'El agua de mar se potabiliza directamente',
+      'El agua potable tiene sabor a cloro',
+      'El agua sucia puede purificarse y volver a ser potable',
+      'El agua potable no pasa por ningún filtro'
+    ],
+    c:2,
+    exp:'✔ El agua sucia puede ser purificada y volver a ser potable gracias al proceso de potabilización.'
+  },
+];
+
+// ── ESTADO ──
+let actual = 0, puntaje = 0, historial = [], respondido = false;
+
+function initHistorial() {
+  historial = PREGUNTAS.map(() => ({ respondido: false, seleccion: null, correcta: false }));
+}
+
+function render() {
+  if (actual >= PREGUNTAS.length) { mostrarResultado(); return; }
+
+  const p = PREGUNTAS[actual];
+  const h = historial[actual];
+  const pct = Math.round((actual / PREGUNTAS.length) * 100);
+
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-count').textContent = `${actual + 1}/${PREGUNTAS.length}`;
+  document.getElementById('score-chip').textContent = `⭐ ${puntaje}`;
+
+  const letras = ['A','B','C','D'];
+  const optsHTML = p.opts.map((o, i) => {
+    let cls = '';
+    if (h.respondido) {
+      if (i === p.c) cls = ' correct';
+      else if (i === h.seleccion && i !== p.c) cls = ' wrong';
+    }
+    return `<button class="opt-btn${cls}" onclick="responder(${i})" id="opt-${i}" ${h.respondido ? 'disabled' : ''}>
+      <span class="opt-letra">${letras[i]}</span>${o}
+    </button>`;
+  }).join('');
+
+  const feedbackHTML = h.respondido
+    ? `<div class="feedback show ${h.correcta ? 'ok' : 'mal'}">${h.correcta
+        ? `🎉 ¡Muy bien! ${p.exp}`
+        : `❌ Casi. La respuesta correcta era: <strong>${p.opts[p.c]}</strong><br>${p.exp}`
+      }</div>`
+    : `<div class="feedback" id="feedback"></div>`;
+
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="q-card">
+      <div style="margin-bottom:0.6rem;">
+        <span class="q-cat" style="color:${p.color};border-color:${p.color}44;background:${p.color}10;">
+          ${p.emoji} ${p.cat}
+        </span>
+      </div>
+      <div class="q-num">Pregunta ${actual + 1} de ${PREGUNTAS.length}</div>
+      <div class="q-text">${p.q}</div>
+      <div class="options">${optsHTML}</div>
+      ${feedbackHTML}
+      <div class="nav-row">
+        <button class="btn-anterior ${actual > 0 ? 'show' : ''}" onclick="irAnterior()">← Anterior</button>
+        <button class="btn-reintentar ${h.respondido && !h.correcta ? 'show' : ''}" onclick="reintentar()">🔄 Reintentar</button>
+        <button class="btn-siguiente ${h.respondido ? 'show' : ''}" onclick="siguiente()">
+          ${actual + 1 < PREGUNTAS.length ? 'Siguiente →' : 'Ver resultados 🏁'}
+        </button>
+      </div>
+    </div>`;
+
+  respondido = h.respondido;
+}
+
+function responder(idx) {
+  if (respondido) return;
+  respondido = true;
+  const p = PREGUNTAS[actual];
+  const h = historial[actual];
+  const esOk = idx === p.c;
+
+  h.respondido = true;
+  h.seleccion = idx;
+  h.correcta = esOk;
+  if (esOk) puntaje++;
+
+  document.getElementById('score-chip').textContent = `⭐ ${puntaje}`;
+  document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+  document.getElementById(`opt-${idx}`).classList.add(esOk ? 'correct' : 'wrong');
+  if (!esOk) document.getElementById(`opt-${p.c}`).classList.add('correct');
+
+  const fb = document.getElementById('feedback');
+  fb.className = `feedback show ${esOk ? 'ok' : 'mal'}`;
+  fb.innerHTML = esOk
+    ? `🎉 ¡Muy bien! ${p.exp}`
+    : `❌ Casi. La respuesta correcta era: <strong>${p.opts[p.c]}</strong><br>${p.exp}`;
+
+  const navRow = document.querySelector('.nav-row');
+  if (actual > 0) navRow.querySelector('.btn-anterior').classList.add('show');
+  if (!esOk) navRow.querySelector('.btn-reintentar').classList.add('show');
+  navRow.querySelector('.btn-siguiente').classList.add('show');
+}
+
+function reintentar() {
+  const h = historial[actual];
+  if (h.correcta) return;
+  if (h.correcta === false && h.respondido) puntaje = Math.max(0, puntaje); // no doble descuento
+  h.respondido = false;
+  h.seleccion = null;
+  h.correcta = false;
+  respondido = false;
+  render();
+}
+
+function siguiente() { actual++; render(); }
+function irAnterior() { if (actual > 0) { actual--; render(); } }
+
+function mostrarResultado() {
+  document.getElementById('prog-fill').style.width = '100%';
+  document.getElementById('prog-count').textContent = `${PREGUNTAS.length}/${PREGUNTAS.length}`;
+  document.getElementById('quiz-area').innerHTML = '';
+
+  const total = PREGUNTAS.length;
+  const pct = Math.round((puntaje / total) * 100);
+  const [emoji, msg] =
+    pct === 100 ? ['🏆','¡Perfecto! ¡Lo sabés todo!'] :
+    pct >= 80   ? ['🌟','¡Excelente! ¡Casi perfecto!'] :
+    pct >= 60   ? ['😊','¡Bien hecho! Repasá un poco más.'] :
+                  ['💪','¡Seguí practicando, vos podés!'];
+
+  const resumen = historial.map((h, i) =>
+    `<div class="res-item ${h.correcta ? 'ok2' : 'no2'}">
+      <span class="ri">${h.correcta ? '✅' : '❌'}</span>P${i+1}
+    </div>`).join('');
+
+  const res = document.getElementById('resultado');
+  res.innerHTML = `
+    <div class="res-card">
+      <span class="res-emoji">${emoji}</span>
+      <div class="res-titulo">${msg}</div>
+      <div class="res-score">${puntaje}/${total}</div>
+      <div class="res-sub">Respondiste correctamente el <strong>${pct}%</strong> de las preguntas.</div>
+      <div class="resumen-grid">${resumen}</div>
+      <button class="btn-nuevo" onclick="reiniciar()">🔄 Empezar de nuevo</button>
+    </div>`;
+  res.classList.add('show');
+}
+
+function reiniciar() {
+  actual = 0; puntaje = 0; respondido = false;
+  initHistorial();
+  document.getElementById('resultado').classList.remove('show');
+  document.getElementById('resultado').innerHTML = '';
+  render();
+}
+
+initHistorial();
+render();
+</script>
+</body>
+</html>
