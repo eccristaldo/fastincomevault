@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Las Cooperativas — Quiz Interactivo</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --teal:    #00897B;
+  --teal2:   #26A69A;
+  --teal3:   #B2DFDB;
+  --blue:    #1976D2;
+  --purple:  #7B5EA7;
+  --orange:  #E67E22;
+  --green:   #2E7D32;
+  --red:     #C62828;
+  --bg:      #F0FAFA;
+  --white:   #FFFFFF;
+  --text:    #1A2E2A;
+  --muted:   #5A7A76;
+  --border:  #B2DFDB;
+  --correct: #2E7D32;
+  --wrong:   #C62828;
+  --r: 18px;
+  --shadow: 0 6px 24px rgba(0,137,123,0.13);
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 4rem;
+  background-image:
+    radial-gradient(circle at 5% 10%, rgba(0,137,123,0.09) 0%, transparent 45%),
+    radial-gradient(circle at 92% 85%, rgba(26,166,154,0.07) 0%, transparent 45%);
+}
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, #00695C 0%, #00897B 55%, #26A69A 100%);
+  padding: 2.5rem 1.5rem 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content:''; position:absolute; top:-50px; right:-50px;
+  width:180px; height:180px; border-radius:50%;
+  background:rgba(255,255,255,0.10);
+}
+.header::after {
+  content:''; position:absolute; bottom:-30px; left:-30px;
+  width:130px; height:130px; border-radius:50%;
+  background:rgba(255,255,255,0.07);
+}
+.header-badge {
+  display:inline-block;
+  background:rgba(255,255,255,0.20);
+  border:1px solid rgba(255,255,255,0.35);
+  color:#fff; font-size:11px; font-weight:800;
+  letter-spacing:0.12em; text-transform:uppercase;
+  padding:4px 14px; border-radius:999px; margin-bottom:0.9rem;
+}
+.header h1 {
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(2rem,6vw,3.2rem);
+  color:#fff; text-shadow:0 2px 16px rgba(0,0,0,0.18);
+  margin-bottom:0.3rem; line-height:1.1;
+}
+.header p { color:rgba(255,255,255,0.88); font-size:14px; font-weight:700; }
+
+/* MAIN */
+.main { max-width:700px; margin:-2.5rem auto 0; padding:0 1.25rem; position:relative; z-index:1; }
+
+/* PROGRESO */
+.prog-card {
+  background:var(--white); border-radius:var(--r);
+  box-shadow:var(--shadow); padding:1.1rem 1.4rem;
+  margin-bottom:1.25rem; display:flex; align-items:center; gap:1rem;
+}
+.prog-info { flex:1; }
+.prog-label { font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:5px; }
+.prog-bar-bg { height:10px; background:var(--teal3); border-radius:999px; overflow:hidden; }
+.prog-bar-fill {
+  height:100%;
+  background:linear-gradient(90deg,var(--teal),var(--teal2));
+  border-radius:999px;
+  transition:width 0.5s cubic-bezier(.4,0,.2,1);
+  width:0%;
+}
+.prog-count { font-family:'Fredoka One',cursive; font-size:1.6rem; color:var(--teal); white-space:nowrap; }
+.score-chip {
+  background:#E0F2F1; border:1.5px solid #80CBC4;
+  border-radius:999px; padding:4px 12px;
+  font-size:13px; font-weight:800; color:var(--teal); white-space:nowrap;
+}
+
+/* QUESTION CARD */
+.q-card {
+  background:var(--white); border-radius:var(--r);
+  box-shadow:var(--shadow); padding:1.75rem;
+  margin-bottom:1.25rem; animation:slideUp 0.35s ease;
+  border:1.5px solid var(--border);
+}
+@keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+.q-cat {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:11px; font-weight:800; letter-spacing:0.08em;
+  text-transform:uppercase; padding:4px 12px;
+  border-radius:999px; margin-bottom:1rem;
+  border:1.5px solid currentColor;
+}
+.q-num { font-size:12px; font-weight:800; color:var(--muted); margin-bottom:0.5rem; }
+.q-text {
+  font-family:'Fredoka One',cursive; font-size:19px;
+  color:var(--text); line-height:1.4; margin-bottom:1.3rem;
+}
+.q-tipo {
+  font-size:11px; font-weight:800; color:var(--muted);
+  background:var(--bg); border-radius:999px;
+  padding:3px 10px; display:inline-block; margin-bottom:0.8rem;
+  border:1px solid var(--border);
+}
+
+/* OPTIONS — selección única */
+.options { display:flex; flex-direction:column; gap:10px; }
+.opt-btn {
+  background:var(--bg); border:2px solid var(--border);
+  border-radius:13px; padding:0.85rem 1.1rem;
+  font-family:'Nunito',sans-serif; font-size:15px;
+  font-weight:700; color:var(--text); cursor:pointer;
+  text-align:left; display:flex; align-items:center;
+  gap:12px; transition:all 0.18s;
+}
+.opt-btn:hover:not(:disabled) {
+  border-color:var(--teal); background:#E0F2F1;
+  transform:translateX(5px);
+}
+.opt-letra {
+  width:30px; height:30px; border-radius:50%;
+  background:var(--teal3); display:flex;
+  align-items:center; justify-content:center;
+  font-size:12px; font-weight:900; flex-shrink:0; transition:all 0.18s;
+}
+.opt-btn.correct { background:#E8F5E9; border-color:var(--correct); color:#1B5E20; }
+.opt-btn.correct .opt-letra { background:var(--correct); color:#fff; }
+.opt-btn.wrong { background:#FFEBEE; border-color:var(--wrong); color:var(--wrong); }
+.opt-btn.wrong .opt-letra { background:var(--wrong); color:#fff; }
+.opt-btn:disabled { cursor:default; }
+
+/* OPTIONS — selección múltiple */
+.multi-opts { display:flex; flex-direction:column; gap:10px; margin-bottom:0.8rem; }
+.multi-btn {
+  background:var(--bg); border:2px solid var(--border);
+  border-radius:13px; padding:0.85rem 1.1rem;
+  font-family:'Nunito',sans-serif; font-size:15px;
+  font-weight:700; color:var(--text); cursor:pointer;
+  text-align:left; display:flex; align-items:center;
+  gap:12px; transition:all 0.18s; user-select:none;
+}
+.multi-btn:hover:not(.bloqueado) {
+  border-color:var(--teal); background:#E0F2F1;
+}
+.multi-check {
+  width:22px; height:22px; border-radius:6px;
+  border:2px solid var(--teal3); background:var(--white);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; flex-shrink:0; transition:all 0.18s;
+}
+.multi-btn.seleccionado { border-color:var(--teal); background:#E0F2F1; }
+.multi-btn.seleccionado .multi-check { background:var(--teal); border-color:var(--teal); color:#fff; }
+.multi-btn.multi-correct { background:#E8F5E9; border-color:var(--correct); color:#1B5E20; }
+.multi-btn.multi-correct .multi-check { background:var(--correct); border-color:var(--correct); color:#fff; }
+.multi-btn.multi-wrong { background:#FFEBEE; border-color:var(--wrong); color:var(--wrong); }
+.multi-btn.multi-wrong .multi-check { background:var(--wrong); border-color:var(--wrong); color:#fff; }
+.multi-btn.bloqueado { cursor:default; }
+.btn-confirmar-multi {
+  background:linear-gradient(135deg,var(--teal),var(--teal2));
+  border:none; border-radius:999px; padding:0.65rem 1.5rem;
+  font-family:'Fredoka One',cursive; font-size:14px; color:#fff;
+  cursor:pointer; transition:all 0.18s;
+  box-shadow:0 3px 12px rgba(0,137,123,0.25);
+}
+.btn-confirmar-multi:hover { transform:translateY(-1px); }
+.btn-confirmar-multi:disabled { opacity:0.5; cursor:default; }
+
+/* FEEDBACK */
+.feedback {
+  margin-top:1rem; border-radius:12px; padding:0.9rem 1.1rem;
+  font-size:14px; font-weight:700; line-height:1.55;
+  display:none; animation:pop 0.22s ease;
+}
+@keyframes pop { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+.feedback.show { display:block; }
+.feedback.ok  { background:#E8F5E9; border:1.5px solid #A5D6A7; color:#1B5E20; }
+.feedback.mal { background:#FFEBEE; border:1.5px solid #EF9A9A; color:#B71C1C; }
+
+/* NAV */
+.nav-row { display:flex; gap:10px; margin-top:1rem; flex-wrap:wrap; }
+.btn-reintentar {
+  background:#E0F2F1; border:2px solid #80CBC4;
+  border-radius:999px; padding:0.65rem 1.3rem;
+  font-family:'Nunito',sans-serif; font-size:13px;
+  font-weight:800; color:var(--teal); cursor:pointer;
+  display:none; transition:all 0.15s;
+}
+.btn-reintentar:hover { background:#B2DFDB; }
+.btn-reintentar.show { display:inline-flex; align-items:center; gap:6px; }
+
+.btn-anterior {
+  background:#EDE7F6; border:2px solid #CE93D8;
+  border-radius:999px; padding:0.65rem 1.3rem;
+  font-family:'Nunito',sans-serif; font-size:13px;
+  font-weight:800; color:var(--purple); cursor:pointer;
+  display:none; transition:all 0.15s;
+}
+.btn-anterior:hover { background:#E1BEE7; }
+.btn-anterior.show { display:inline-flex; align-items:center; gap:6px; }
+
+.btn-siguiente {
+  background:linear-gradient(135deg,var(--teal),var(--teal2));
+  border:none; border-radius:999px; padding:0.7rem 1.6rem;
+  font-family:'Fredoka One',cursive; font-size:15px; color:#fff;
+  cursor:pointer; display:none; transition:all 0.18s;
+  box-shadow:0 4px 16px rgba(0,137,123,0.28); margin-left:auto;
+}
+.btn-siguiente:hover { transform:translateY(-2px); }
+.btn-siguiente.show { display:inline-flex; align-items:center; gap:8px; }
+
+/* RESULTADO */
+.resultado { display:none; text-align:center; animation:slideUp 0.4s ease; }
+.resultado.show { display:block; }
+.res-card {
+  background:var(--white); border-radius:var(--r);
+  box-shadow:var(--shadow); padding:2.5rem 1.75rem;
+  border:1.5px solid var(--border); margin-bottom:1.25rem;
+}
+.res-emoji { font-size:5rem; display:block; margin-bottom:1rem; }
+.res-titulo { font-family:'Fredoka One',cursive; font-size:2rem; color:var(--text); margin-bottom:0.4rem; }
+.res-score {
+  font-family:'Fredoka One',cursive; font-size:4.5rem;
+  background:linear-gradient(135deg,var(--teal),var(--teal2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text; line-height:1; margin-bottom:0.25rem;
+}
+.res-sub { font-size:14px; font-weight:700; color:var(--muted); margin-bottom:1.5rem; }
+.resumen-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-bottom:1.5rem; }
+@media(max-width:480px){ .resumen-grid{ grid-template-columns:repeat(4,1fr); } }
+.res-item {
+  background:var(--bg); border-radius:10px; padding:10px 6px;
+  font-size:11px; font-weight:800; text-align:center; color:var(--muted);
+}
+.res-item .ri { font-size:1.3rem; display:block; margin-bottom:3px; }
+.res-item.ok2 { color:var(--correct); border:1.5px solid #A5D6A7; background:#E8F5E9; }
+.res-item.no2 { color:var(--wrong);   border:1.5px solid #EF9A9A; background:#FFEBEE; }
+.btn-nuevo {
+  background:linear-gradient(135deg,var(--teal),var(--teal2));
+  border:none; border-radius:999px; padding:0.9rem 2.2rem;
+  font-family:'Fredoka One',cursive; font-size:17px; color:#fff;
+  cursor:pointer; transition:all 0.18s;
+  box-shadow:0 4px 16px rgba(0,137,123,0.28);
+}
+.btn-nuevo:hover { transform:translateY(-2px); }
+.footer-note { text-align:center; font-size:12px; color:var(--muted); font-weight:700; padding:1.5rem 1rem 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">Unidad 4 · Módulo 1</div>
+  <h1>Las Cooperativas</h1>
+  <p>Conocernos y respetarnos · Quiz interactivo</p>
+</div>
+
+<div class="main">
+  <div class="prog-card">
+    <div class="prog-info">
+      <div class="prog-label">Tu progreso</div>
+      <div class="prog-bar-bg"><div class="prog-bar-fill" id="prog-fill"></div></div>
+    </div>
+    <div class="prog-count" id="prog-count">0/0</div>
+    <div class="score-chip" id="score-chip">⭐ 0</div>
+  </div>
+
+  <div id="quiz-area"></div>
+  <div class="resultado" id="resultado"></div>
+  <div class="footer-note">Ciencias Sociales · Unidad 4 Módulo 1 · Las Cooperativas</div>
+</div>
+
+<script>
+// tipo: 'single' o 'multi'
+// para multi, c es un array de índices correctos
+const PREGUNTAS = [
+  {
+    cat:'¿Qué es una cooperativa?', emoji:'🤝', color:'#00897B', tipo:'single',
+    q:'¿Qué son las cooperativas?',
+    opts:['Empresas privadas con dueños que buscan ganancias propias','Organizaciones de personas que se unen para realizar trabajos en equipo','Grupos de amigos que se reúnen a jugar','Organizaciones del gobierno para ayudar a los pobres'],
+    c:1,
+    exp:'✔ Las cooperativas son organizaciones de personas que se unen con el fin de realizar trabajos en equipo, que serían muy difíciles de llevar a cabo por una sola persona.'
+  },
+  {
+    cat:'¿Qué es una cooperativa?', emoji:'🤝', color:'#00897B', tipo:'single',
+    q:'¿Con qué funcionan las cooperativas?',
+    opts:['Con préstamos del gobierno','Con el aporte en dinero y trabajo de las personas que las forman','Solo con donaciones','Con dinero de empresas extranjeras'],
+    c:1,
+    exp:'✔ Las cooperativas funcionan con el aporte en dinero y trabajo de las personas que las forman.'
+  },
+  {
+    cat:'Objetivos', emoji:'🎯', color:'#1976D2', tipo:'multi',
+    q:'¿Cuáles son los tres objetivos principales de una cooperativa? (Seleccioná los 3 correctos)',
+    opts:['Brindar servicios a sus integrantes','Obtener el mayor poder político posible','Obtener beneficios económicos','Mejorar las condiciones de vida de los miembros de la comunidad','Competir contra otras cooperativas'],
+    c:[0,2,3],
+    exp:'✔ Los tres objetivos son: brindar servicios a sus integrantes, obtener beneficios económicos y mejorar las condiciones de vida de los miembros de la comunidad.'
+  },
+  {
+    cat:'Integrantes', emoji:'👥', color:'#7B5EA7', tipo:'single',
+    q:'¿Cómo se llaman las personas que integran una cooperativa?',
+    opts:['Empleados','Consultores','Socios','Voluntarios'],
+    c:2,
+    exp:'✔ Las personas que integran una cooperativa se llaman socios.'
+  },
+  {
+    cat:'Integrantes', emoji:'👥', color:'#7B5EA7', tipo:'single',
+    q:'¿Qué hacen los directores, administradores y funcionarios en la cooperativa?',
+    opts:[
+      'Se encargan de las actividades culturales únicamente',
+      'Se ocupan de que las decisiones de los socios se realicen correctamente',
+      'Son los dueños de la cooperativa',
+      'Solo administran el dinero'
+    ],
+    c:1,
+    exp:'✔ Los directores se ocupan de que las decisiones de los socios se realicen a través de los administradores y funcionarios.'
+  },
+  {
+    cat:'Integrantes', emoji:'👥', color:'#7B5EA7', tipo:'single',
+    q:'¿Para qué sirven los comités en una cooperativa?',
+    opts:[
+      'Para tomar las decisiones más importantes',
+      'Para manejar el dinero de la cooperativa',
+      'Para trabajar en objetivos puntuales como actividades educativas, culturales o tareas solidarias',
+      'Para controlar a los socios'
+    ],
+    c:2,
+    exp:'✔ Los comités trabajan para cumplir otros objetivos puntuales, como realizar actividades educativas o culturales, llevar tareas solidarias, entre otros.'
+  },
+  {
+    cat:'Valores', emoji:'💚', color:'#2E7D32', tipo:'multi',
+    q:'¿Cuáles de estos son valores del cooperativismo? (Seleccioná todos los correctos)',
+    opts:['El bien común','La competencia individual','La ayuda mutua','La participación democrática','El lucro personal','La responsabilidad','La igualdad','La solidaridad'],
+    c:[0,2,3,5,6,7],
+    exp:'✔ Los valores del cooperativismo son: el bien común, la ayuda mutua, la participación democrática, la responsabilidad, la igualdad, la equidad y la solidaridad.'
+  },
+  {
+    cat:'Valores', emoji:'💚', color:'#2E7D32', tipo:'single',
+    q:'¿Qué significa el valor de la igualdad en una cooperativa?',
+    opts:[
+      'Que todos ganan lo mismo',
+      'Que todos tienen los mismos derechos y deberes',
+      'Que todos son amigos',
+      'Que todos hacen el mismo trabajo'
+    ],
+    c:1,
+    exp:'✔ La igualdad significa que todos los socios tienen los mismos derechos y deberes.'
+  },
+  {
+    cat:'Valores', emoji:'💚', color:'#2E7D32', tipo:'single',
+    q:'¿Qué significa la solidaridad como valor cooperativo?',
+    opts:['Trabajar más horas','La ayuda a los demás','Pagar más cuota','Ser el mejor socio'],
+    c:1,
+    exp:'✔ La solidaridad significa la ayuda a los demás. Es un valor central del cooperativismo.'
+  },
+  {
+    cat:'Valores', emoji:'💚', color:'#2E7D32', tipo:'single',
+    q:'¿Qué significa la equidad en el cooperativismo?',
+    opts:[
+      'Que los socios más antiguos mandan más',
+      'Que todos son tratados por igual',
+      'Que todos aportan la misma cantidad de dinero',
+      'Que los más ricos tienen más derechos'
+    ],
+    c:1,
+    exp:'✔ La equidad significa que todos son tratados por igual, sin diferencias.'
+  },
+  {
+    cat:'Principios', emoji:'📋', color:'#E67E22', tipo:'single',
+    q:'¿Quién puede asociarse a una cooperativa?',
+    opts:[
+      'Solo personas del mismo país',
+      'Solo personas del mismo género',
+      'Todas las personas interesadas, sin importar género, religión o nacionalidad',
+      'Solo personas con mucho dinero'
+    ],
+    c:2,
+    exp:'✔ Las cooperativas están abiertas a todas las personas interesadas en asociarse, sin importar género, religión o nacionalidad.'
+  },
+  {
+    cat:'Principios', emoji:'📋', color:'#E67E22', tipo:'single',
+    q:'¿Cómo se toman las decisiones en una cooperativa?',
+    opts:[
+      'El director decide todo',
+      'El socio más rico decide',
+      'De forma democrática: cada socio tiene un voto',
+      'Por votación solo de los administradores'
+    ],
+    c:2,
+    exp:'✔ Las decisiones se toman de forma democrática: cada socio tiene un voto, sin importar cuánto dinero haya aportado.'
+  },
+  {
+    cat:'Principios', emoji:'📋', color:'#E67E22', tipo:'single',
+    q:'¿Cómo aportan los socios a la cooperativa?',
+    opts:[
+      'Unos aportan más que otros según su riqueza',
+      'En partes iguales en dinero o recursos para el desarrollo de las actividades',
+      'Solo con trabajo, nunca con dinero',
+      'Solo con dinero, nunca con trabajo'
+    ],
+    c:1,
+    exp:'✔ Los socios aportan en partes iguales el dinero o los recursos para el desarrollo de las actividades.'
+  },
+  {
+    cat:'Principios', emoji:'📋', color:'#E67E22', tipo:'single',
+    q:'¿Las cooperativas forman parte de algún partido político o tienen carácter religioso?',
+    opts:[
+      'Sí, siempre apoyan a un partido político',
+      'Sí, muchas tienen carácter religioso',
+      'No, no forman parte de ningún partido político ni tienen carácter religioso',
+      'Depende del país donde estén'
+    ],
+    c:2,
+    exp:'✔ Las cooperativas no forman parte de ningún partido político ni tienen carácter religioso.'
+  },
+  {
+    cat:'Principios', emoji:'📋', color:'#E67E22', tipo:'multi',
+    q:'¿A quiénes informan y capacitan las cooperativas sobre el cooperativismo? (Seleccioná todos)',
+    opts:['A sus socios','Al gobierno','A los empleados','A personas ajenas a la cooperativa','A las personas vinculadas a la cooperativa'],
+    c:[0,2,4],
+    exp:'✔ Las cooperativas informan y capacitan a sus socios, los empleados y las personas vinculadas acerca del cooperativismo.'
+  },
+  {
+    cat:'Principios', emoji:'📋', color:'#E67E22', tipo:'single',
+    q:'¿Con quién trabajan en conjunto las cooperativas?',
+    opts:['Solo con el gobierno','Con empresas privadas únicamente','Con otras cooperativas','Con bancos internacionales'],
+    c:2,
+    exp:'✔ Las cooperativas trabajan en forma conjunta con otras cooperativas.'
+  },
+  {
+    cat:'Verdadero o Falso', emoji:'✅', color:'#00695C', tipo:'single',
+    q:'¿Es correcto decir que "es indispensable ser paraguayo para ser socio de una cooperativa"?',
+    opts:['Sí, es correcto','No, es incorrecto — cualquier persona puede asociarse sin importar su nacionalidad'],
+    c:1,
+    exp:'✔ Es INCORRECTO. Las cooperativas están abiertas a todas las personas interesadas, sin importar su nacionalidad.'
+  },
+  {
+    cat:'Verdadero o Falso', emoji:'✅', color:'#00695C', tipo:'single',
+    q:'¿Es correcto decir que "los que forman parte de una cooperativa se llaman consultores"?',
+    opts:['Sí, es correcto','No, es incorrecto — se llaman socios'],
+    c:1,
+    exp:'✔ Es INCORRECTO. Las personas que integran una cooperativa se llaman socios, no consultores.'
+  },
+  {
+    cat:'Verdadero o Falso', emoji:'✅', color:'#00695C', tipo:'single',
+    q:'¿Es correcto decir que "las cooperativas solo trabajan para buscar su propio bien"?',
+    opts:['Sí, es correcto','No, es incorrecto — también trabajan para la comunidad y el bien común'],
+    c:1,
+    exp:'✔ Es INCORRECTO. Las cooperativas trabajan para el bien común, no solo para su propio beneficio.'
+  },
+  {
+    cat:'Verdadero o Falso', emoji:'✅', color:'#00695C', tipo:'single',
+    q:'¿Es correcto decir que "el espíritu de trabajo y la solidaridad son valores del cooperativismo"?',
+    opts:['Sí, es correcto','No, es incorrecto'],
+    c:0,
+    exp:'✔ Es CORRECTO. Todas las cooperativas se identifican por su espíritu de trabajo y su solidaridad.'
+  },
+];
+
+let actual = 0, puntaje = 0, respondido = false;
+let historial = [];
+let multiSel = new Set();
+
+function initHistorial() {
+  historial = PREGUNTAS.map(() => ({ respondido:false, seleccion:null, correcta:false }));
+}
+
+function render() {
+  if (actual >= PREGUNTAS.length) { mostrarResultado(); return; }
+  const p = PREGUNTAS[actual];
+  const h = historial[actual];
+  const pct = Math.round((actual / PREGUNTAS.length) * 100);
+
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-count').textContent = `${actual+1}/${PREGUNTAS.length}`;
+  document.getElementById('score-chip').textContent = `⭐ ${puntaje}`;
+
+  multiSel = new Set();
+
+  let optsHTML = '';
+  if (p.tipo === 'single') {
+    const letras = ['A','B','C','D','E'];
+    optsHTML = `<div class="options">${p.opts.map((o,i) => {
+      let cls = '';
+      if (h.respondido) {
+        if (i === p.c) cls = ' correct';
+        else if (i === h.seleccion && i !== p.c) cls = ' wrong';
+      }
+      return `<button class="opt-btn${cls}" onclick="responder(${i})" id="opt-${i}" ${h.respondido?'disabled':''}>
+        <span class="opt-letra">${letras[i]}</span>${o}
+      </button>`;
+    }).join('')}</div>`;
+  } else {
+    // multi
+    const letras = ['A','B','C','D','E','F','G','H'];
+    const bloq = h.respondido ? ' bloqueado' : '';
+    optsHTML = `
+      <div class="multi-opts">${p.opts.map((o,i) => {
+        let cls = '';
+        if (h.respondido) {
+          const esCorrecta = p.c.includes(i);
+          const fueSel = h.seleccion && h.seleccion.includes(i);
+          if (esCorrecta) cls = ' multi-correct';
+          else if (fueSel && !esCorrecta) cls = ' multi-wrong';
+        }
+        return `<button class="multi-btn${cls}${bloq}" onclick="toggleMulti(${i})" id="mopt-${i}">
+          <span class="multi-check" id="mcheck-${i}">${h.respondido && p.c.includes(i) ? '✓' : (h.respondido && h.seleccion && h.seleccion.includes(i) && !p.c.includes(i) ? '✗' : '')}</span>
+          ${o}
+        </button>`;
+      }).join('')}</div>
+      <button class="btn-confirmar-multi" id="btn-confirmar" onclick="confirmarMulti()" ${h.respondido?'disabled':''}>
+        Confirmar respuesta ✓
+      </button>`;
+  }
+
+  const feedbackHTML = h.respondido
+    ? `<div class="feedback show ${h.correcta?'ok':'mal'}">${h.correcta
+        ? `🎉 ¡Muy bien! ${p.exp}`
+        : `❌ Revisá. ${p.exp}`
+      }</div>`
+    : `<div class="feedback" id="feedback"></div>`;
+
+  const tipoLabel = p.tipo === 'multi'
+    ? '✏️ Selección múltiple — elegí todos los correctos'
+    : '✏️ Selección única';
+
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="q-card">
+      <div style="margin-bottom:0.5rem;">
+        <span class="q-cat" style="color:${p.color};border-color:${p.color}44;background:${p.color}10;">
+          ${p.emoji} ${p.cat}
+        </span>
+      </div>
+      <div class="q-num">Pregunta ${actual+1} de ${PREGUNTAS.length}</div>
+      <div class="q-tipo">${tipoLabel}</div>
+      <div class="q-text">${p.q}</div>
+      ${optsHTML}
+      ${feedbackHTML}
+      <div class="nav-row">
+        <button class="btn-anterior ${actual>0?'show':''}" onclick="irAnterior()">← Anterior</button>
+        <button class="btn-reintentar ${h.respondido&&!h.correcta?'show':''}" onclick="reintentar()">🔄 Reintentar</button>
+        <button class="btn-siguiente ${h.respondido?'show':''}" onclick="siguiente()">
+          ${actual+1 < PREGUNTAS.length ? 'Siguiente →' : 'Ver resultados 🏁'}
+        </button>
+      </div>
+    </div>`;
+
+  respondido = h.respondido;
+}
+
+function responder(idx) {
+  if (respondido) return;
+  respondido = true;
+  const p = PREGUNTAS[actual];
+  const h = historial[actual];
+  const esOk = idx === p.c;
+  h.respondido = true; h.seleccion = idx; h.correcta = esOk;
+  if (esOk) puntaje++;
+  document.getElementById('score-chip').textContent = `⭐ ${puntaje}`;
+  document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+  document.getElementById(`opt-${idx}`).classList.add(esOk?'correct':'wrong');
+  if (!esOk) document.getElementById(`opt-${p.c}`).classList.add('correct');
+  const fb = document.getElementById('feedback');
+  fb.className = `feedback show ${esOk?'ok':'mal'}`;
+  fb.innerHTML = esOk ? `🎉 ¡Muy bien! ${p.exp}` : `❌ Revisá. La correcta era: <strong>${p.opts[p.c]}</strong><br>${p.exp}`;
+  const nav = document.querySelector('.nav-row');
+  if (actual > 0) nav.querySelector('.btn-anterior').classList.add('show');
+  if (!esOk) nav.querySelector('.btn-reintentar').classList.add('show');
+  nav.querySelector('.btn-siguiente').classList.add('show');
+}
+
+function toggleMulti(idx) {
+  if (respondido) return;
+  if (multiSel.has(idx)) multiSel.delete(idx);
+  else multiSel.add(idx);
+  const btn = document.getElementById(`mopt-${idx}`);
+  const chk = document.getElementById(`mcheck-${idx}`);
+  if (multiSel.has(idx)) {
+    btn.classList.add('seleccionado');
+    chk.textContent = '✓';
+  } else {
+    btn.classList.remove('seleccionado');
+    chk.textContent = '';
+  }
+}
+
+function confirmarMulti() {
+  if (respondido) return;
+  respondido = true;
+  const p = PREGUNTAS[actual];
+  const h = historial[actual];
+  const sel = Array.from(multiSel).sort();
+  const correctos = [...p.c].sort();
+  const esOk = JSON.stringify(sel) === JSON.stringify(correctos);
+  h.respondido = true; h.seleccion = sel; h.correcta = esOk;
+  if (esOk) puntaje++;
+  document.getElementById('score-chip').textContent = `⭐ ${puntaje}`;
+  document.getElementById('btn-confirmar').disabled = true;
+  document.querySelectorAll('.multi-btn').forEach(b => b.classList.add('bloqueado'));
+  p.opts.forEach((_, i) => {
+    const btn = document.getElementById(`mopt-${i}`);
+    const chk = document.getElementById(`mcheck-${i}`);
+    const esCorr = p.c.includes(i);
+    const fueSel = multiSel.has(i);
+    if (esCorr) { btn.classList.add('multi-correct'); chk.textContent = '✓'; }
+    else if (fueSel) { btn.classList.add('multi-wrong'); chk.textContent = '✗'; }
+  });
+
+  // insert feedback
+  const existing = document.getElementById('feedback');
+  existing.className = `feedback show ${esOk?'ok':'mal'}`;
+  existing.innerHTML = esOk
+    ? `🎉 ¡Perfecto! Seleccionaste todas las correctas. ${p.exp}`
+    : `❌ No del todo. ${p.exp}`;
+
+  const nav = document.querySelector('.nav-row');
+  if (actual > 0) nav.querySelector('.btn-anterior').classList.add('show');
+  if (!esOk) nav.querySelector('.btn-reintentar').classList.add('show');
+  nav.querySelector('.btn-siguiente').classList.add('show');
+}
+
+function reintentar() {
+  const h = historial[actual];
+  if (h.correcta) return;
+  h.respondido = false; h.seleccion = null; h.correcta = false;
+  respondido = false;
+  multiSel = new Set();
+  render();
+}
+
+function siguiente() { actual++; render(); }
+function irAnterior() { if (actual > 0) { actual--; render(); } }
+
+function mostrarResultado() {
+  document.getElementById('prog-fill').style.width = '100%';
+  document.getElementById('prog-count').textContent = `${PREGUNTAS.length}/${PREGUNTAS.length}`;
+  document.getElementById('quiz-area').innerHTML = '';
+  const total = PREGUNTAS.length;
+  const pct = Math.round((puntaje/total)*100);
+  const [emoji,msg] =
+    pct===100 ? ['🏆','¡Perfecto! ¡Sos un experto en cooperativas!'] :
+    pct>=80   ? ['🌟','¡Excelente! ¡Casi todo bien!'] :
+    pct>=60   ? ['😊','¡Bien hecho! Repasá un poco más.'] :
+                ['💪','¡Seguí practicando, vos podés!'];
+  const resumen = historial.map((h,i) =>
+    `<div class="res-item ${h.correcta?'ok2':'no2'}">
+      <span class="ri">${h.correcta?'✅':'❌'}</span>P${i+1}
+    </div>`).join('');
+  const res = document.getElementById('resultado');
+  res.innerHTML = `
+    <div class="res-card">
+      <span class="res-emoji">${emoji}</span>
+      <div class="res-titulo">${msg}</div>
+      <div class="res-score">${puntaje}/${total}</div>
+      <div class="res-sub">Respondiste correctamente el <strong>${pct}%</strong> de las preguntas.</div>
+      <div class="resumen-grid">${resumen}</div>
+      <button class="btn-nuevo" onclick="reiniciar()">🔄 Empezar de nuevo</button>
+    </div>`;
+  res.classList.add('show');
+}
+
+function reiniciar() {
+  actual=0; puntaje=0; respondido=false; multiSel=new Set();
+  initHistorial();
+  document.getElementById('resultado').classList.remove('show');
+  document.getElementById('resultado').innerHTML='';
+  render();
+}
+
+initHistorial();
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Democracia y la Constitución — Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --blue:    #1565C0;
+  --blue2:   #1976D2;
+  --blue3:   #BBDEFB;
+  --gold:    #F9A825;
+  --gold2:   #FFD54F;
+  --purple:  #6A1B9A;
+  --green:   #2E7D32;
+  --red:     #C62828;
+  --bg:      #F0F4FF;
+  --white:   #FFFFFF;
+  --text:    #1A1E3A;
+  --muted:   #5A6A90;
+  --border:  #BBDEFB;
+  --correct: #2E7D32;
+  --wrong:   #C62828;
+  --r: 18px;
+  --shadow: 0 6px 24px rgba(21,101,192,0.13);
+}
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; padding-bottom: 4rem;
+  background-image:
+    radial-gradient(circle at 5% 10%, rgba(21,101,192,0.09) 0%, transparent 45%),
+    radial-gradient(circle at 92% 85%, rgba(249,168,37,0.08) 0%, transparent 45%);
+}
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, #0D47A1 0%, #1565C0 55%, #1976D2 100%);
+  padding: 2.5rem 1.5rem 4rem;
+  text-align: center; position: relative; overflow: hidden;
+}
+.header::before { content:''; position:absolute; top:-50px; right:-50px; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,0.08); }
+.header::after  { content:''; position:absolute; bottom:-30px; left:-30px; width:130px; height:130px; border-radius:50%; background:rgba(249,168,37,0.15); }
+.header-badge { display:inline-block; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.35); color:#fff; font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; padding:4px 14px; border-radius:999px; margin-bottom:0.9rem; }
+.header h1 { font-family:'Fredoka One',cursive; font-size:clamp(2rem,6vw,3.2rem); color:#fff; text-shadow:0 2px 16px rgba(0,0,0,0.2); margin-bottom:0.3rem; line-height:1.1; }
+.header p { color:rgba(255,255,255,0.88); font-size:14px; font-weight:700; }
+
+/* MAIN */
+.main { max-width:700px; margin:-2.5rem auto 0; padding:0 1.25rem; position:relative; z-index:1; }
+
+/* PROGRESO */
+.prog-card { background:var(--white); border-radius:var(--r); box-shadow:var(--shadow); padding:1.1rem 1.4rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:1rem; }
+.prog-info { flex:1; }
+.prog-label { font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:5px; }
+.prog-bar-bg { height:10px; background:var(--blue3); border-radius:999px; overflow:hidden; }
+.prog-bar-fill { height:100%; background:linear-gradient(90deg,var(--blue),var(--gold)); border-radius:999px; transition:width 0.5s cubic-bezier(.4,0,.2,1); width:0%; }
+.prog-count { font-family:'Fredoka One',cursive; font-size:1.6rem; color:var(--blue); white-space:nowrap; }
+.score-chip { background:#E3F2FD; border:1.5px solid #90CAF9; border-radius:999px; padding:4px 12px; font-size:13px; font-weight:800; color:var(--blue); white-space:nowrap; }
+
+/* QUESTION CARD */
+.q-card { background:var(--white); border-radius:var(--r); box-shadow:var(--shadow); padding:1.75rem; margin-bottom:1.25rem; animation:slideUp 0.35s ease; border:1.5px solid var(--border); }
+@keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.q-cat { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; padding:4px 12px; border-radius:999px; margin-bottom:1rem; border:1.5px solid currentColor; }
+.q-num { font-size:12px; font-weight:800; color:var(--muted); margin-bottom:0.5rem; }
+.q-tipo { font-size:11px; font-weight:800; color:var(--muted); background:var(--bg); border-radius:999px; padding:3px 10px; display:inline-block; margin-bottom:0.8rem; border:1px solid var(--border); }
+.q-text { font-family:'Fredoka One',cursive; font-size:19px; color:var(--text); line-height:1.4; margin-bottom:1.3rem; }
+
+/* OPTIONS single */
+.options { display:flex; flex-direction:column; gap:10px; }
+.opt-btn { background:var(--bg); border:2px solid var(--border); border-radius:13px; padding:0.85rem 1.1rem; font-family:'Nunito',sans-serif; font-size:15px; font-weight:700; color:var(--text); cursor:pointer; text-align:left; display:flex; align-items:center; gap:12px; transition:all 0.18s; }
+.opt-btn:hover:not(:disabled) { border-color:var(--blue); background:#E3F2FD; transform:translateX(5px); }
+.opt-letra { width:30px; height:30px; border-radius:50%; background:var(--blue3); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; flex-shrink:0; transition:all 0.18s; }
+.opt-btn.correct { background:#E8F5E9; border-color:var(--correct); color:#1B5E20; }
+.opt-btn.correct .opt-letra { background:var(--correct); color:#fff; }
+.opt-btn.wrong   { background:#FFEBEE; border-color:var(--wrong); color:var(--wrong); }
+.opt-btn.wrong   .opt-letra { background:var(--wrong); color:#fff; }
+.opt-btn:disabled { cursor:default; }
+
+/* OPTIONS multi */
+.multi-opts { display:flex; flex-direction:column; gap:10px; margin-bottom:0.8rem; }
+.multi-btn { background:var(--bg); border:2px solid var(--border); border-radius:13px; padding:0.85rem 1.1rem; font-family:'Nunito',sans-serif; font-size:15px; font-weight:700; color:var(--text); cursor:pointer; text-align:left; display:flex; align-items:center; gap:12px; transition:all 0.18s; user-select:none; }
+.multi-btn:hover:not(.bloqueado) { border-color:var(--blue); background:#E3F2FD; }
+.multi-check { width:22px; height:22px; border-radius:6px; border:2px solid var(--blue3); background:var(--white); display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; transition:all 0.18s; }
+.multi-btn.seleccionado { border-color:var(--blue); background:#E3F2FD; }
+.multi-btn.seleccionado .multi-check { background:var(--blue); border-color:var(--blue); color:#fff; }
+.multi-btn.multi-correct { background:#E8F5E9; border-color:var(--correct); color:#1B5E20; }
+.multi-btn.multi-correct .multi-check { background:var(--correct); border-color:var(--correct); color:#fff; }
+.multi-btn.multi-wrong { background:#FFEBEE; border-color:var(--wrong); color:var(--wrong); }
+.multi-btn.multi-wrong .multi-check { background:var(--wrong); border-color:var(--wrong); color:#fff; }
+.multi-btn.bloqueado { cursor:default; }
+.btn-confirmar-multi { background:linear-gradient(135deg,var(--blue),var(--blue2)); border:none; border-radius:999px; padding:0.65rem 1.5rem; font-family:'Fredoka One',cursive; font-size:14px; color:#fff; cursor:pointer; transition:all 0.18s; box-shadow:0 3px 12px rgba(21,101,192,0.25); }
+.btn-confirmar-multi:hover { transform:translateY(-1px); }
+.btn-confirmar-multi:disabled { opacity:0.5; cursor:default; }
+
+/* FEEDBACK */
+.feedback { margin-top:1rem; border-radius:12px; padding:0.9rem 1.1rem; font-size:14px; font-weight:700; line-height:1.55; display:none; animation:pop 0.22s ease; }
+@keyframes pop { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+.feedback.show { display:block; }
+.feedback.ok  { background:#E8F5E9; border:1.5px solid #A5D6A7; color:#1B5E20; }
+.feedback.mal { background:#FFEBEE; border:1.5px solid #EF9A9A; color:#B71C1C; }
+
+/* NAV */
+.nav-row { display:flex; gap:10px; margin-top:1rem; flex-wrap:wrap; }
+.btn-reintentar { background:#E3F2FD; border:2px solid #90CAF9; border-radius:999px; padding:0.65rem 1.3rem; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; color:var(--blue); cursor:pointer; display:none; transition:all 0.15s; }
+.btn-reintentar:hover { background:#BBDEFB; }
+.btn-reintentar.show { display:inline-flex; align-items:center; gap:6px; }
+.btn-anterior { background:#EDE7F6; border:2px solid #CE93D8; border-radius:999px; padding:0.65rem 1.3rem; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; color:var(--purple); cursor:pointer; display:none; transition:all 0.15s; }
+.btn-anterior:hover { background:#E1BEE7; }
+.btn-anterior.show { display:inline-flex; align-items:center; gap:6px; }
+.btn-siguiente { background:linear-gradient(135deg,var(--blue),var(--gold)); border:none; border-radius:999px; padding:0.7rem 1.6rem; font-family:'Fredoka One',cursive; font-size:15px; color:#fff; cursor:pointer; display:none; transition:all 0.18s; box-shadow:0 4px 16px rgba(21,101,192,0.28); margin-left:auto; }
+.btn-siguiente:hover { transform:translateY(-2px); }
+.btn-siguiente.show { display:inline-flex; align-items:center; gap:8px; }
+
+/* RESULTADO */
+.resultado { display:none; text-align:center; animation:slideUp 0.4s ease; }
+.resultado.show { display:block; }
+.res-card { background:var(--white); border-radius:var(--r); box-shadow:var(--shadow); padding:2.5rem 1.75rem; border:1.5px solid var(--border); margin-bottom:1.25rem; }
+.res-emoji { font-size:5rem; display:block; margin-bottom:1rem; }
+.res-titulo { font-family:'Fredoka One',cursive; font-size:2rem; color:var(--text); margin-bottom:0.4rem; }
+.res-score { font-family:'Fredoka One',cursive; font-size:4.5rem; background:linear-gradient(135deg,var(--blue),var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; margin-bottom:0.25rem; }
+.res-sub { font-size:14px; font-weight:700; color:var(--muted); margin-bottom:1.5rem; }
+.resumen-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-bottom:1.5rem; }
+@media(max-width:480px){ .resumen-grid{ grid-template-columns:repeat(4,1fr); } }
+.res-item { background:var(--bg); border-radius:10px; padding:10px 6px; font-size:11px; font-weight:800; text-align:center; color:var(--muted); }
+.res-item .ri { font-size:1.3rem; display:block; margin-bottom:3px; }
+.res-item.ok2 { color:var(--correct); border:1.5px solid #A5D6A7; background:#E8F5E9; }
+.res-item.no2 { color:var(--wrong);   border:1.5px solid #EF9A9A; background:#FFEBEE; }
+.btn-nuevo { background:linear-gradient(135deg,var(--blue),var(--gold)); border:none; border-radius:999px; padding:0.9rem 2.2rem; font-family:'Fredoka One',cursive; font-size:17px; color:#fff; cursor:pointer; transition:all 0.18s; box-shadow:0 4px 16px rgba(21,101,192,0.28); }
+.btn-nuevo:hover { transform:translateY(-2px); }
+.footer-note { text-align:center; font-size:12px; color:var(--muted); font-weight:700; padding:1.5rem 1rem 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">Unidad 4 · Módulo 2</div>
+  <h1>Democracia y Constitución</h1>
+  <p>Vivimos en sociedad · Quiz interactivo</p>
+</div>
+
+<div class="main">
+  <div class="prog-card">
+    <div class="prog-info">
+      <div class="prog-label">Tu progreso</div>
+      <div class="prog-bar-bg"><div class="prog-bar-fill" id="prog-fill"></div></div>
+    </div>
+    <div class="prog-count" id="prog-count">0/0</div>
+    <div class="score-chip" id="score-chip">⭐ 0</div>
+  </div>
+  <div id="quiz-area"></div>
+  <div class="resultado" id="resultado"></div>
+  <div class="footer-note">Ciencias Sociales · Unidad 4 Módulo 2 · Vivimos en sociedad</div>
+</div>
+
+<script>
+const PREGUNTAS = [
+
+  // ── LA DEMOCRACIA ──
+  {
+    cat:'La democracia', emoji:'🗳️', color:'#1565C0', tipo:'single',
+    q:'¿Qué es la democracia?',
+    opts:[
+      'Un sistema donde solo los ricos pueden gobernar',
+      'Un sistema de gobierno en el que el pueblo, a través de su voto, delega a un grupo de personas la función de gobernar',
+      'Un sistema donde el ejército toma el poder',
+      'Un sistema de gobierno donde una sola persona decide todo'
+    ],
+    c:1,
+    exp:'✔ La democracia es un sistema de gobierno en el que el pueblo, a través de su voto, delega a un grupo de personas la función de gobernar.'
+  },
+  {
+    cat:'La democracia', emoji:'🗳️', color:'#1565C0', tipo:'multi',
+    q:'¿En qué principios se fundamenta un Estado democrático? (Seleccioná todos los correctos)',
+    opts:['Libertad','Fuerza militar','Igualdad','Justicia','Riqueza','Respeto','Solidaridad'],
+    c:[0,2,3,5,6],
+    exp:'✔ Un Estado democrático se fundamenta en los principios de libertad, igualdad, justicia, respeto y solidaridad.'
+  },
+  {
+    cat:'Orígenes', emoji:'🏛️', color:'#6A1B9A', tipo:'single',
+    q:'¿Dónde y cuándo se puso en práctica la democracia por primera vez?',
+    opts:[
+      'En Roma, hace 3000 años',
+      'En Egipto, hace 4000 años',
+      'En la antigua Grecia, hace casi 2500 años',
+      'En China, hace 1000 años'
+    ],
+    c:2,
+    exp:'✔ La democracia se puso en práctica por primera vez en la antigua Grecia, hace casi 2500 años, en Atenas.'
+  },
+  {
+    cat:'Orígenes', emoji:'🏛️', color:'#6A1B9A', tipo:'multi',
+    q:'En la antigua Atenas, ¿qué podían hacer los ciudadanos? (Seleccioná todos)',
+    opts:[
+      'Elegir a sus gobernantes',
+      'Acceder a cargos públicos',
+      'Gobernar de forma vitalicia',
+      'Intervenir en la asamblea para tomar decisiones del gobierno de la ciudad',
+      'Votar en secreto por internet'
+    ],
+    c:[0,1,3],
+    exp:'✔ En Atenas, los ciudadanos podían elegir a sus gobernantes, acceder a cargos públicos e intervenir en la asamblea para tomar decisiones relacionadas con el gobierno de la ciudad.'
+  },
+  {
+    cat:'Orígenes', emoji:'🏛️', color:'#6A1B9A', tipo:'single',
+    q:'¿Por qué la democracia griega era "directa"?',
+    opts:[
+      'Porque las decisiones se tomaban por internet',
+      'Porque los ciudadanos participaban personalmente en la asamblea para tomar decisiones',
+      'Porque el rey tomaba las decisiones directamente',
+      'Porque había elecciones cada año'
+    ],
+    c:1,
+    exp:'✔ La democracia griega era directa porque los propios ciudadanos participaban en la asamblea para tomar decisiones del gobierno de la ciudad.'
+  },
+  {
+    cat:'Democracia actual', emoji:'🌍', color:'#1976D2', tipo:'single',
+    q:'¿Por qué en la actualidad las democracias son representativas o indirectas?',
+    opts:[
+      'Porque la gente no quiere votar',
+      'Porque las sociedades actuales son tan grandes y complejas que sería imposible gobernarlas como en la antigua Grecia',
+      'Porque es más económico',
+      'Porque el gobierno lo decide así'
+    ],
+    c:1,
+    exp:'✔ Las sociedades actuales son tan grandes y complejas que sería imposible gobernarlas como en la antigua Grecia, por eso surgen las democracias representativas.'
+  },
+  {
+    cat:'Democracia actual', emoji:'🌍', color:'#1976D2', tipo:'single',
+    q:'En una democracia representativa, ¿qué hacen los ciudadanos?',
+    opts:[
+      'Gobiernan directamente ellos mismos',
+      'No participan en ninguna decisión',
+      'Eligen a sus representantes y les ceden, por un período establecido, la posibilidad de hacer propuestas, decidir y gobernar',
+      'Solo pagan impuestos'
+    ],
+    c:2,
+    exp:'✔ En la democracia representativa, los ciudadanos eligen a sus representantes y les ceden, por un período establecido, la posibilidad de hacer propuestas, decidir y gobernar.'
+  },
+  {
+    cat:'Estado democrático', emoji:'⚖️', color:'#E65100', tipo:'multi',
+    q:'¿Cuáles son las condiciones que debe cumplir un Estado para ser democrático? (Seleccioná todas)',
+    opts:[
+      'La vigencia de una Constitución',
+      'Un ejército poderoso',
+      'La división de poderes',
+      'La elección de los cargos públicos',
+      'La periodicidad de los cargos',
+      'La responsabilidad de los actos de gobierno',
+      'Tener muchas riquezas naturales'
+    ],
+    c:[0,2,3,4,5],
+    exp:'✔ Un Estado es democrático cuando cumple: vigencia de una Constitución, división de poderes, elección de cargos públicos, periodicidad de los cargos y responsabilidad de los actos de gobierno.'
+  },
+  {
+    cat:'Estado democrático', emoji:'⚖️', color:'#E65100', tipo:'single',
+    q:'¿Para qué sirve la división de poderes?',
+    opts:[
+      'Para que el gobierno trabaje más rápido',
+      'Para poner límites y evitar que una persona o grupo controle de manera absoluta las decisiones del Gobierno',
+      'Para separar al ejército del gobierno',
+      'Para organizar los impuestos del país'
+    ],
+    c:1,
+    exp:'✔ La división de poderes es imprescindible para poner límites y evitar que una persona o grupo controle de manera absoluta las decisiones del Gobierno.'
+  },
+  {
+    cat:'Estado democrático', emoji:'⚖️', color:'#E65100', tipo:'single',
+    q:'¿Qué garantiza la periodicidad de los cargos?',
+    opts:[
+      'Que los gobernantes siempre sean los mismos',
+      'Que los mandatos no sean perpetuos, sino que se renueven cada cierto tiempo',
+      'Que los cargos duren toda la vida',
+      'Que solo los jóvenes puedan gobernar'
+    ],
+    c:1,
+    exp:'✔ La periodicidad de los cargos garantiza que los mandatos no sean perpetuos, sino que se renueven cada cierto tiempo.'
+  },
+  {
+    cat:'Estado democrático', emoji:'⚖️', color:'#E65100', tipo:'single',
+    q:'¿Qué significa la responsabilidad de los actos de gobierno?',
+    opts:[
+      'Que el gobierno puede hacer lo que quiera',
+      'Que los gobernantes son responsables ante el pueblo de lo que hacen; si no son honestos, deben responder ante la ley',
+      'Que el gobierno responde solo ante el ejército',
+      'Que los ciudadanos son responsables de elegir bien'
+    ],
+    c:1,
+    exp:'✔ Los gobernantes son responsables ante el pueblo de lo que hacen durante el ejercicio de sus cargos. Si no son honestos, deben responder ante la ley.'
+  },
+  {
+    cat:'Estado democrático', emoji:'⚖️', color:'#E65100', tipo:'single',
+    q:'¿A través de qué se eligen los cargos públicos en democracia?',
+    opts:['Por sorteo','Por el ejército','A través del voto de los ciudadanos','Por decisión del presidente'],
+    c:2,
+    exp:'✔ A través del voto se eligen ciudadanos para que cumplan las funciones de gobierno: presidente, vicepresidente, diputados, senadores y demás autoridades.'
+  },
+
+  // ── LA CONSTITUCIÓN NACIONAL ──
+  {
+    cat:'Las leyes', emoji:'📜', color:'#1B5E20', tipo:'single',
+    q:'¿Qué son las leyes?',
+    opts:[
+      'Opiniones del gobierno que pueden ignorarse',
+      'Normas escritas aceptadas por la comunidad y aprobadas por las autoridades de un país',
+      'Reglas que solo aplican a los adultos',
+      'Acuerdos entre empresas privadas'
+    ],
+    c:1,
+    exp:'✔ Las leyes son normas escritas aceptadas por la comunidad y aprobadas por las autoridades de un país.'
+  },
+  {
+    cat:'Las leyes', emoji:'📜', color:'#1B5E20', tipo:'multi',
+    q:'¿Qué aspectos regulan las leyes? (Seleccioná todos los que menciona el libro)',
+    opts:[
+      'La educación',
+      'El trabajo',
+      'El gobierno',
+      'El deporte profesional',
+      'El comercio',
+      'Las relaciones entre las personas'
+    ],
+    c:[0,1,2,4,5],
+    exp:'✔ Las leyes regulan la educación, el trabajo, el gobierno, el comercio y las relaciones entre las personas, entre otros aspectos.'
+  },
+  {
+    cat:'Las leyes', emoji:'📜', color:'#1B5E20', tipo:'single',
+    q:'¿Qué pasa cuando una persona incumple una ley?',
+    opts:[
+      'Nada, las leyes son voluntarias',
+      'Recae sobre ella una sanción',
+      'Debe pagar una multa solamente',
+      'El gobierno le da una advertencia verbal'
+    ],
+    c:1,
+    exp:'✔ Cuando una persona incumple una ley, recae sobre ella una sanción.'
+  },
+  {
+    cat:'La Constitución', emoji:'🇵🇾', color:'#C62828', tipo:'single',
+    q:'¿Cuál es la ley suprema en el Paraguay?',
+    opts:['El Código Civil','El Código Penal','La Constitución Nacional','El Reglamento del Congreso'],
+    c:2,
+    exp:'✔ La ley suprema en el Paraguay es la Constitución Nacional.'
+  },
+  {
+    cat:'La Constitución', emoji:'🇵🇾', color:'#C62828', tipo:'multi',
+    q:'¿Qué establece la Constitución Nacional? (Seleccioná todos)',
+    opts:[
+      'Los derechos y deberes de las personas',
+      'El precio de los productos en el mercado',
+      'La forma de gobierno que rige a la nación (República democrática)',
+      'Los equipos de fútbol del país',
+      'La organización del Estado en tres poderes: Ejecutivo, Legislativo y Judicial'
+    ],
+    c:[0,2,4],
+    exp:'✔ La Constitución establece los derechos y deberes de las personas, la forma de gobierno (República democrática) y la organización del Estado en tres poderes: Ejecutivo, Legislativo y Judicial.'
+  },
+  {
+    cat:'La Constitución', emoji:'🇵🇾', color:'#C62828', tipo:'single',
+    q:'¿Cuándo fue aprobada la actual Constitución Nacional del Paraguay?',
+    opts:['En 1870','En 1940','En 1967','En 1992'],
+    c:3,
+    exp:'✔ La última Constitución del Paraguay se aprobó en 1992. Fue sancionada el 20 de junio de 1992.'
+  },
+  {
+    cat:'La Constitución', emoji:'🇵🇾', color:'#C62828', tipo:'single',
+    q:'¿Quiénes redactaron la Constitución de 1992?',
+    opts:[
+      'El presidente y sus ministros',
+      'Los jueces de la Corte Suprema',
+      'Ciudadanos elegidos por el pueblo que integraron la Convención Nacional Constituyente (CNC)',
+      'Un grupo de abogados nombrados por el ejército'
+    ],
+    c:2,
+    exp:'✔ Para redactarla, los ciudadanos eligieron, en 1991, a quienes integraron la Convención Nacional Constituyente (CNC), llamados "convencionales".'
+  },
+  {
+    cat:'La Constitución', emoji:'🇵🇾', color:'#C62828', tipo:'single',
+    q:'¿Cómo está organizada la Constitución Nacional?',
+    opts:[
+      'En un solo texto sin divisiones',
+      'En dos partes, que se dividen en títulos, capítulos y artículos',
+      'En tres tomos separados',
+      'Solo en artículos numerados sin capítulos'
+    ],
+    c:1,
+    exp:'✔ La Constitución consta de dos partes, que se dividen en títulos y estos, a su vez, en capítulos. Cada capítulo tiene un nombre que indica de qué trata y se compone de varios artículos.'
+  },
+  {
+    cat:'La Constitución', emoji:'🇵🇾', color:'#C62828', tipo:'multi',
+    q:'¿Cuáles de estos temas tienen capítulos en la Constitución? (Seleccioná todos los que menciona el libro)',
+    opts:[
+      'La familia',
+      'Los equipos deportivos',
+      'Los pueblos indígenas',
+      'La salud',
+      'La moda',
+      'La educación',
+      'La cultura',
+      'Los derechos laborales'
+    ],
+    c:[0,2,3,5,6,7],
+    exp:'✔ La Constitución tiene capítulos referidos a la familia, los pueblos indígenas, la salud, la educación, la cultura, los derechos laborales, entre otros.'
+  },
+  {
+    cat:'La Constitución', emoji:'🇵🇾', color:'#C62828', tipo:'single',
+    q:'¿Cuáles son los tres poderes del Estado que organiza la Constitución?',
+    opts:[
+      'Judicial, Militar y Ejecutivo',
+      'Ejecutivo, Legislativo y Judicial',
+      'Legislativo, Municipal y Ejecutivo',
+      'Judicial, Educativo y Legislativo'
+    ],
+    c:1,
+    exp:'✔ La Constitución establece la organización del Estado en tres poderes: Ejecutivo, Legislativo y Judicial.'
+  },
+];
+
+let actual=0, puntaje=0, respondido=false, historial=[], multiSel=new Set();
+
+function initHistorial() {
+  historial = PREGUNTAS.map(() => ({respondido:false,seleccion:null,correcta:false}));
+}
+
+function render() {
+  if (actual >= PREGUNTAS.length) { mostrarResultado(); return; }
+  const p = PREGUNTAS[actual];
+  const h = historial[actual];
+  const pct = Math.round((actual/PREGUNTAS.length)*100);
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-count').textContent = `${actual+1}/${PREGUNTAS.length}`;
+  document.getElementById('score-chip').textContent = `⭐ ${puntaje}`;
+  multiSel = new Set();
+
+  const letras = ['A','B','C','D','E','F','G','H'];
+  let optsHTML = '';
+
+  if (p.tipo === 'single') {
+    optsHTML = `<div class="options">${p.opts.map((o,i)=>{
+      let cls='';
+      if(h.respondido){ if(i===p.c) cls=' correct'; else if(i===h.seleccion) cls=' wrong'; }
+      return `<button class="opt-btn${cls}" onclick="responder(${i})" id="opt-${i}" ${h.respondido?'disabled':''}>
+        <span class="opt-letra">${letras[i]}</span>${o}</button>`;
+    }).join('')}</div>`;
+  } else {
+    const bloq = h.respondido?' bloqueado':'';
+    optsHTML = `
+      <div class="multi-opts">${p.opts.map((o,i)=>{
+        let cls='';
+        if(h.respondido){
+          if(p.c.includes(i)) cls=' multi-correct';
+          else if(h.seleccion&&h.seleccion.includes(i)) cls=' multi-wrong';
+        }
+        const chkTxt = h.respondido
+          ? (p.c.includes(i)?'✓':(h.seleccion&&h.seleccion.includes(i)&&!p.c.includes(i)?'✗':''))
+          : '';
+        return `<button class="multi-btn${cls}${bloq}" onclick="toggleMulti(${i})" id="mopt-${i}">
+          <span class="multi-check" id="mcheck-${i}">${chkTxt}</span>${o}</button>`;
+      }).join('')}</div>
+      <button class="btn-confirmar-multi" id="btn-confirmar" onclick="confirmarMulti()" ${h.respondido?'disabled':''}>Confirmar ✓</button>`;
+  }
+
+  const feedHTML = h.respondido
+    ? `<div class="feedback show ${h.correcta?'ok':'mal'}">${h.correcta
+        ? `🎉 ¡Muy bien! ${p.exp}`
+        : `❌ Revisá. ${p.exp}`}</div>`
+    : `<div class="feedback" id="feedback"></div>`;
+
+  const tipoLabel = p.tipo==='multi'
+    ? '✏️ Selección múltiple — elegí todos los correctos'
+    : '✏️ Selección única';
+
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="q-card">
+      <div style="margin-bottom:0.5rem;">
+        <span class="q-cat" style="color:${p.color};border-color:${p.color}44;background:${p.color}10;">
+          ${p.emoji} ${p.cat}
+        </span>
+      </div>
+      <div class="q-num">Pregunta ${actual+1} de ${PREGUNTAS.length}</div>
+      <div class="q-tipo">${tipoLabel}</div>
+      <div class="q-text">${p.q}</div>
+      ${optsHTML}
+      ${feedHTML}
+      <div class="nav-row">
+        <button class="btn-anterior ${actual>0?'show':''}" onclick="irAnterior()">← Anterior</button>
+        <button class="btn-reintentar ${h.respondido&&!h.correcta?'show':''}" onclick="reintentar()">🔄 Reintentar</button>
+        <button class="btn-siguiente ${h.respondido?'show':''}" onclick="siguiente()">
+          ${actual+1<PREGUNTAS.length?'Siguiente →':'Ver resultados 🏁'}
+        </button>
+      </div>
+    </div>`;
+  respondido = h.respondido;
+}
+
+function responder(idx) {
+  if(respondido) return;
+  respondido=true;
+  const p=PREGUNTAS[actual], h=historial[actual];
+  const esOk=idx===p.c;
+  h.respondido=true; h.seleccion=idx; h.correcta=esOk;
+  if(esOk) puntaje++;
+  document.getElementById('score-chip').textContent=`⭐ ${puntaje}`;
+  document.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);
+  document.getElementById(`opt-${idx}`).classList.add(esOk?'correct':'wrong');
+  if(!esOk) document.getElementById(`opt-${p.c}`).classList.add('correct');
+  const fb=document.getElementById('feedback');
+  fb.className=`feedback show ${esOk?'ok':'mal'}`;
+  fb.innerHTML=esOk?`🎉 ¡Muy bien! ${p.exp}`:`❌ La correcta era: <strong>${p.opts[p.c]}</strong><br>${p.exp}`;
+  const nav=document.querySelector('.nav-row');
+  if(actual>0) nav.querySelector('.btn-anterior').classList.add('show');
+  if(!esOk) nav.querySelector('.btn-reintentar').classList.add('show');
+  nav.querySelector('.btn-siguiente').classList.add('show');
+}
+
+function toggleMulti(idx) {
+  if(respondido) return;
+  if(multiSel.has(idx)) multiSel.delete(idx); else multiSel.add(idx);
+  const btn=document.getElementById(`mopt-${idx}`);
+  const chk=document.getElementById(`mcheck-${idx}`);
+  if(multiSel.has(idx)){ btn.classList.add('seleccionado'); chk.textContent='✓'; }
+  else { btn.classList.remove('seleccionado'); chk.textContent=''; }
+}
+
+function confirmarMulti() {
+  if(respondido) return;
+  respondido=true;
+  const p=PREGUNTAS[actual], h=historial[actual];
+  const sel=[...multiSel].sort();
+  const corr=[...p.c].sort();
+  const esOk=JSON.stringify(sel)===JSON.stringify(corr);
+  h.respondido=true; h.seleccion=sel; h.correcta=esOk;
+  if(esOk) puntaje++;
+  document.getElementById('score-chip').textContent=`⭐ ${puntaje}`;
+  document.getElementById('btn-confirmar').disabled=true;
+  document.querySelectorAll('.multi-btn').forEach(b=>b.classList.add('bloqueado'));
+  p.opts.forEach((_,i)=>{
+    const btn=document.getElementById(`mopt-${i}`);
+    const chk=document.getElementById(`mcheck-${i}`);
+    if(p.c.includes(i)){ btn.classList.add('multi-correct'); chk.textContent='✓'; }
+    else if(multiSel.has(i)){ btn.classList.add('multi-wrong'); chk.textContent='✗'; }
+  });
+  const fb=document.getElementById('feedback');
+  fb.className=`feedback show ${esOk?'ok':'mal'}`;
+  fb.innerHTML=esOk?`🎉 ¡Perfecto! ${p.exp}`:`❌ Revisá. ${p.exp}`;
+  const nav=document.querySelector('.nav-row');
+  if(actual>0) nav.querySelector('.btn-anterior').classList.add('show');
+  if(!esOk) nav.querySelector('.btn-reintentar').classList.add('show');
+  nav.querySelector('.btn-siguiente').classList.add('show');
+}
+
+function reintentar() {
+  const h=historial[actual];
+  if(h.correcta) return;
+  h.respondido=false; h.seleccion=null; h.correcta=false;
+  respondido=false; multiSel=new Set();
+  render();
+}
+
+function siguiente() { actual++; render(); }
+function irAnterior() { if(actual>0){ actual--; render(); } }
+
+function mostrarResultado() {
+  document.getElementById('prog-fill').style.width='100%';
+  document.getElementById('prog-count').textContent=`${PREGUNTAS.length}/${PREGUNTAS.length}`;
+  document.getElementById('quiz-area').innerHTML='';
+  const total=PREGUNTAS.length, pct=Math.round((puntaje/total)*100);
+  const [emoji,msg]=
+    pct===100?['🏆','¡Perfecto! ¡Sos un experto!']:
+    pct>=80?['🌟','¡Excelente! ¡Casi todo bien!']:
+    pct>=60?['😊','¡Bien! Repasá un poco más.']:
+    ['💪','¡Seguí practicando!'];
+  const resumen=historial.map((h,i)=>
+    `<div class="res-item ${h.correcta?'ok2':'no2'}">
+      <span class="ri">${h.correcta?'✅':'❌'}</span>P${i+1}</div>`).join('');
+  const res=document.getElementById('resultado');
+  res.innerHTML=`
+    <div class="res-card">
+      <span class="res-emoji">${emoji}</span>
+      <div class="res-titulo">${msg}</div>
+      <div class="res-score">${puntaje}/${total}</div>
+      <div class="res-sub">Respondiste correctamente el <strong>${pct}%</strong> de las preguntas.</div>
+      <div class="resumen-grid">${resumen}</div>
+      <button class="btn-nuevo" onclick="reiniciar()">🔄 Empezar de nuevo</button>
+    </div>`;
+  res.classList.add('show');
+}
+
+function reiniciar() {
+  actual=0; puntaje=0; respondido=false; multiSel=new Set();
+  initHistorial();
+  document.getElementById('resultado').classList.remove('show');
+  document.getElementById('resultado').innerHTML='';
+  render();
+}
+
+initHistorial();
+render();
+</script>
+</body>
+</html>
