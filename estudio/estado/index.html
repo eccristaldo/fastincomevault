@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Estado Paraguayo — Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --red:     #C8102E;
+  --red2:    #E53935;
+  --blue:    #003087;
+  --blue2:   #1565C0;
+  --white:   #FFFFFF;
+  --gold:    #F9A825;
+  --purple:  #6A1B9A;
+  --green:   #2E7D32;
+  --wrong:   #C62828;
+  --correct: #2E7D32;
+  --bg:      #FFF8F8;
+  --card:    #FFFFFF;
+  --border:  #FFCDD2;
+  --muted:   #7A5A5A;
+  --text:    #1A0A0A;
+  --r: 18px;
+  --shadow: 0 6px 24px rgba(200,16,46,0.12);
+}
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; padding-bottom: 4rem;
+  background-image:
+    radial-gradient(circle at 5% 10%, rgba(200,16,46,0.07) 0%, transparent 45%),
+    radial-gradient(circle at 92% 85%, rgba(0,48,135,0.07) 0%, transparent 45%);
+}
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, #C8102E 0%, #D32F2F 40%, #003087 100%);
+  padding: 2.5rem 1.5rem 4rem;
+  text-align: center; position: relative; overflow: hidden;
+}
+.header::before { content:''; position:absolute; top:-40px; right:-40px; width:160px; height:160px; border-radius:50%; background:rgba(255,255,255,0.08); }
+.header::after  { content:''; position:absolute; bottom:-30px; left:-30px; width:130px; height:130px; border-radius:50%; background:rgba(249,168,37,0.15); }
+.header-flag { font-size:2.2rem; display:block; margin-bottom:0.5rem; animation:float 3s ease-in-out infinite; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.header-badge { display:inline-block; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.35); color:#fff; font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; padding:4px 14px; border-radius:999px; margin-bottom:0.9rem; }
+.header h1 { font-family:'Fredoka One',cursive; font-size:clamp(2rem,6vw,3.2rem); color:#fff; text-shadow:0 2px 16px rgba(0,0,0,0.25); margin-bottom:0.3rem; line-height:1.1; }
+.header p { color:rgba(255,255,255,0.88); font-size:14px; font-weight:700; }
+
+/* MAIN */
+.main { max-width:700px; margin:-2.5rem auto 0; padding:0 1.25rem; position:relative; z-index:1; }
+
+/* PROGRESO */
+.prog-card { background:var(--card); border-radius:var(--r); box-shadow:var(--shadow); padding:1.1rem 1.4rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:1rem; }
+.prog-info { flex:1; }
+.prog-label { font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:5px; }
+.prog-bar-bg { height:10px; background:#FFCDD2; border-radius:999px; overflow:hidden; }
+.prog-bar-fill { height:100%; background:linear-gradient(90deg,var(--red),var(--blue)); border-radius:999px; transition:width 0.5s cubic-bezier(.4,0,.2,1); width:0%; }
+.prog-count { font-family:'Fredoka One',cursive; font-size:1.6rem; color:var(--red); white-space:nowrap; }
+.score-chip { background:#FFEBEE; border:1.5px solid #FFCDD2; border-radius:999px; padding:4px 12px; font-size:13px; font-weight:800; color:var(--red); white-space:nowrap; }
+
+/* QUESTION CARD */
+.q-card { background:var(--card); border-radius:var(--r); box-shadow:var(--shadow); padding:1.75rem; margin-bottom:1.25rem; animation:slideUp 0.35s ease; border:1.5px solid var(--border); }
+@keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.q-cat { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; padding:4px 12px; border-radius:999px; margin-bottom:1rem; border:1.5px solid currentColor; }
+.q-num { font-size:12px; font-weight:800; color:var(--muted); margin-bottom:0.5rem; }
+.q-tipo { font-size:11px; font-weight:800; color:var(--muted); background:var(--bg); border-radius:999px; padding:3px 10px; display:inline-block; margin-bottom:0.8rem; border:1px solid var(--border); }
+.q-text { font-family:'Fredoka One',cursive; font-size:19px; color:var(--text); line-height:1.4; margin-bottom:1.3rem; }
+
+/* OPTIONS single */
+.options { display:flex; flex-direction:column; gap:10px; }
+.opt-btn { background:var(--bg); border:2px solid var(--border); border-radius:13px; padding:0.85rem 1.1rem; font-family:'Nunito',sans-serif; font-size:15px; font-weight:700; color:var(--text); cursor:pointer; text-align:left; display:flex; align-items:center; gap:12px; transition:all 0.18s; }
+.opt-btn:hover:not(:disabled) { border-color:var(--red); background:#FFEBEE; transform:translateX(5px); }
+.opt-letra { width:30px; height:30px; border-radius:50%; background:#FFCDD2; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; flex-shrink:0; transition:all 0.18s; }
+.opt-btn.correct { background:#E8F5E9; border-color:var(--correct); color:#1B5E20; }
+.opt-btn.correct .opt-letra { background:var(--correct); color:#fff; }
+.opt-btn.wrong   { background:#FFEBEE; border-color:var(--wrong); color:var(--wrong); }
+.opt-btn.wrong   .opt-letra { background:var(--wrong); color:#fff; }
+.opt-btn:disabled { cursor:default; }
+
+/* OPTIONS multi */
+.multi-opts { display:flex; flex-direction:column; gap:10px; margin-bottom:0.8rem; }
+.multi-btn { background:var(--bg); border:2px solid var(--border); border-radius:13px; padding:0.85rem 1.1rem; font-family:'Nunito',sans-serif; font-size:15px; font-weight:700; color:var(--text); cursor:pointer; text-align:left; display:flex; align-items:center; gap:12px; transition:all 0.18s; user-select:none; }
+.multi-btn:hover:not(.bloqueado) { border-color:var(--red); background:#FFEBEE; }
+.multi-check { width:22px; height:22px; border-radius:6px; border:2px solid #FFCDD2; background:var(--white); display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; transition:all 0.18s; }
+.multi-btn.seleccionado { border-color:var(--red); background:#FFEBEE; }
+.multi-btn.seleccionado .multi-check { background:var(--red); border-color:var(--red); color:#fff; }
+.multi-btn.multi-correct { background:#E8F5E9; border-color:var(--correct); color:#1B5E20; }
+.multi-btn.multi-correct .multi-check { background:var(--correct); border-color:var(--correct); color:#fff; }
+.multi-btn.multi-wrong { background:#FFEBEE; border-color:var(--wrong); color:var(--wrong); }
+.multi-btn.multi-wrong .multi-check { background:var(--wrong); border-color:var(--wrong); color:#fff; }
+.multi-btn.bloqueado { cursor:default; }
+.btn-confirmar-multi { background:linear-gradient(135deg,var(--red),var(--blue)); border:none; border-radius:999px; padding:0.65rem 1.5rem; font-family:'Fredoka One',cursive; font-size:14px; color:#fff; cursor:pointer; transition:all 0.18s; box-shadow:0 3px 12px rgba(200,16,46,0.25); }
+.btn-confirmar-multi:hover { transform:translateY(-1px); }
+.btn-confirmar-multi:disabled { opacity:0.5; cursor:default; }
+
+/* FEEDBACK */
+.feedback { margin-top:1rem; border-radius:12px; padding:0.9rem 1.1rem; font-size:14px; font-weight:700; line-height:1.55; display:none; animation:pop 0.22s ease; }
+@keyframes pop { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+.feedback.show { display:block; }
+.feedback.ok  { background:#E8F5E9; border:1.5px solid #A5D6A7; color:#1B5E20; }
+.feedback.mal { background:#FFEBEE; border:1.5px solid #EF9A9A; color:#B71C1C; }
+
+/* NAV */
+.nav-row { display:flex; gap:10px; margin-top:1rem; flex-wrap:wrap; }
+.btn-reintentar { background:#FFEBEE; border:2px solid #FFCDD2; border-radius:999px; padding:0.65rem 1.3rem; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; color:var(--red); cursor:pointer; display:none; transition:all 0.15s; }
+.btn-reintentar:hover { background:#FFCDD2; }
+.btn-reintentar.show { display:inline-flex; align-items:center; gap:6px; }
+.btn-anterior { background:#EDE7F6; border:2px solid #CE93D8; border-radius:999px; padding:0.65rem 1.3rem; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; color:var(--purple); cursor:pointer; display:none; transition:all 0.15s; }
+.btn-anterior:hover { background:#E1BEE7; }
+.btn-anterior.show { display:inline-flex; align-items:center; gap:6px; }
+.btn-siguiente { background:linear-gradient(135deg,var(--red),var(--blue)); border:none; border-radius:999px; padding:0.7rem 1.6rem; font-family:'Fredoka One',cursive; font-size:15px; color:#fff; cursor:pointer; display:none; transition:all 0.18s; box-shadow:0 4px 16px rgba(200,16,46,0.28); margin-left:auto; }
+.btn-siguiente:hover { transform:translateY(-2px); }
+.btn-siguiente.show { display:inline-flex; align-items:center; gap:8px; }
+
+/* RESULTADO */
+.resultado { display:none; text-align:center; animation:slideUp 0.4s ease; }
+.resultado.show { display:block; }
+.res-card { background:var(--card); border-radius:var(--r); box-shadow:var(--shadow); padding:2.5rem 1.75rem; border:1.5px solid var(--border); margin-bottom:1.25rem; }
+.res-emoji { font-size:5rem; display:block; margin-bottom:1rem; }
+.res-titulo { font-family:'Fredoka One',cursive; font-size:2rem; color:var(--text); margin-bottom:0.4rem; }
+.res-score { font-family:'Fredoka One',cursive; font-size:4.5rem; background:linear-gradient(135deg,var(--red),var(--blue)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; margin-bottom:0.25rem; }
+.res-sub { font-size:14px; font-weight:700; color:var(--muted); margin-bottom:1.5rem; }
+.resumen-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-bottom:1.5rem; }
+@media(max-width:480px){ .resumen-grid{ grid-template-columns:repeat(4,1fr); } }
+.res-item { background:var(--bg); border-radius:10px; padding:10px 6px; font-size:11px; font-weight:800; text-align:center; color:var(--muted); }
+.res-item .ri { font-size:1.3rem; display:block; margin-bottom:3px; }
+.res-item.ok2 { color:var(--correct); border:1.5px solid #A5D6A7; background:#E8F5E9; }
+.res-item.no2 { color:var(--wrong);   border:1.5px solid #EF9A9A; background:#FFEBEE; }
+.btn-nuevo { background:linear-gradient(135deg,var(--red),var(--blue)); border:none; border-radius:999px; padding:0.9rem 2.2rem; font-family:'Fredoka One',cursive; font-size:17px; color:#fff; cursor:pointer; transition:all 0.18s; box-shadow:0 4px 16px rgba(200,16,46,0.28); }
+.btn-nuevo:hover { transform:translateY(-2px); }
+.footer-note { text-align:center; font-size:12px; color:var(--muted); font-weight:700; padding:1.5rem 1rem 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-flag">🇵🇾</span>
+  <div class="header-badge">Unidad 4 · Módulo 2</div>
+  <h1>El Estado Paraguayo</h1>
+  <p>Vivimos en sociedad · Los tres poderes · Quiz interactivo</p>
+</div>
+
+<div class="main">
+  <div class="prog-card">
+    <div class="prog-info">
+      <div class="prog-label">Tu progreso</div>
+      <div class="prog-bar-bg"><div class="prog-bar-fill" id="prog-fill"></div></div>
+    </div>
+    <div class="prog-count" id="prog-count">0/0</div>
+    <div class="score-chip" id="score-chip">⭐ 0</div>
+  </div>
+  <div id="quiz-area"></div>
+  <div class="resultado" id="resultado"></div>
+  <div class="footer-note">Ciencias Sociales · Unidad 4 Módulo 2 · El Estado Paraguayo</div>
+</div>
+
+<script>
+const PREGUNTAS = [
+
+  // ── SISTEMA DE GOBIERNO ──
+  {
+    cat:'Sistema de gobierno', emoji:'🏛️', color:'#C8102E', tipo:'single',
+    q:'¿Qué tipo de sistema de gobierno tiene el Paraguay?',
+    opts:['Una monarquía','Una dictadura','Una democracia representativa','Una república federal'],
+    c:2,
+    exp:'✔ Nuestro sistema de gobierno es una democracia representativa: la ciudadanía elige mediante el voto a quienes ocuparán los cargos públicos.'
+  },
+  {
+    cat:'Sistema de gobierno', emoji:'🏛️', color:'#C8102E', tipo:'multi',
+    q:'¿Cuáles de estos cargos públicos son elegidos por el voto ciudadano? (Seleccioná todos)',
+    opts:['Presidente','Vicepresidente','Directores de empresas privadas','Diputados','Senadores','Jueces de la Corte Suprema'],
+    c:[0,1,3,4],
+    exp:'✔ La ciudadanía elige mediante el voto al presidente, vicepresidente, diputados, senadores y demás cargos departamentales y municipales.'
+  },
+  {
+    cat:'El sufragio', emoji:'🗳️', color:'#003087', tipo:'multi',
+    q:'¿Cuáles son las características del sufragio en el Paraguay? (Seleccioná todas)',
+    opts:['Universal','Secreto','Obligatorio solo para hombres','Directo','Libre','Igual'],
+    c:[0,1,3,4,5],
+    exp:'✔ El sufragio en Paraguay es universal, secreto, directo, libre e igual.'
+  },
+  {
+    cat:'El sufragio', emoji:'🗳️', color:'#003087', tipo:'single',
+    q:'¿Qué significa que el sufragio sea "universal"?',
+    opts:[
+      'Que solo votan los universitarios',
+      'Que solo votan los mayores de 21 años',
+      'Que cualquier persona que cumpla los requisitos exigidos y quiera votar podrá hacerlo, sin importar sus condiciones económicas, sociales o culturales',
+      'Que el voto es obligatorio para todos'
+    ],
+    c:2,
+    exp:'✔ El sufragio universal significa que cualquier persona que cumpla los requisitos y quiera votar podrá hacerlo, sin importar sus condiciones económicas, sociales o culturales.'
+  },
+  {
+    cat:'El sufragio', emoji:'🗳️', color:'#003087', tipo:'single',
+    q:'¿Dónde radican los tres poderes del Estado paraguayo?',
+    opts:['En Ciudad del Este','En Encarnación','En Asunción','En Luque'],
+    c:2,
+    exp:'✔ La ciudad de Asunción es la sede del Gobierno nacional, el lugar donde radican los tres poderes del Estado.'
+  },
+
+  // ── PODER EJECUTIVO ──
+  {
+    cat:'Poder Ejecutivo', emoji:'🏠', color:'#C8102E', tipo:'single',
+    q:'¿De qué se encarga el Poder Ejecutivo?',
+    opts:[
+      'De crear las leyes del país',
+      'De aplicar las leyes y dictar justicia',
+      'De hacer cumplir la Constitución, los tratados y las leyes',
+      'De controlar los actos del Gobierno'
+    ],
+    c:2,
+    exp:'✔ El Poder Ejecutivo se encarga de hacer cumplir la Constitución, los tratados y las leyes.'
+  },
+  {
+    cat:'Poder Ejecutivo', emoji:'🏠', color:'#C8102E', tipo:'single',
+    q:'¿Quién es el jefe del Poder Ejecutivo?',
+    opts:['El senador','El vicepresidente','El presidente de la República','El presidente de la Corte Suprema'],
+    c:2,
+    exp:'✔ El jefe del Poder Ejecutivo es el presidente de la República.'
+  },
+  {
+    cat:'Poder Ejecutivo', emoji:'🏠', color:'#C8102E', tipo:'single',
+    q:'¿Por cuántos años es elegido el presidente?',
+    opts:['3 años','4 años','5 años','6 años'],
+    c:2,
+    exp:'✔ El presidente es elegido por el voto popular para un período de gobierno de cinco años, al igual que el vicepresidente.'
+  },
+  {
+    cat:'Poder Ejecutivo', emoji:'🏠', color:'#C8102E', tipo:'single',
+    q:'¿Puede el presidente ser reelegido?',
+    opts:[
+      'Sí, puede ser reelegido una sola vez',
+      'No, el presidente no puede ser reelegido',
+      'Sí, puede ser reelegido indefinidamente',
+      'Sí, pero debe esperar 10 años'
+    ],
+    c:1,
+    exp:'✔ El presidente no puede ser reelegido.'
+  },
+  {
+    cat:'Poder Ejecutivo', emoji:'🏠', color:'#C8102E', tipo:'multi',
+    q:'¿Cuáles son los requisitos para ser presidente? (Seleccioná todos)',
+    opts:[
+      'Ser paraguayo',
+      'Ser médico o abogado',
+      'Tener más de 35 años de edad',
+      'Ser ciudadano con derecho a sufragio',
+      'Haber sido diputado antes',
+      'Tener título universitario'
+    ],
+    c:[0,2,3],
+    exp:'✔ Los requisitos para postularse al cargo de presidente son: ser paraguayo, tener más de 35 años de edad y ser ciudadano con derecho a sufragio.'
+  },
+  {
+    cat:'Poder Ejecutivo', emoji:'🏠', color:'#C8102E', tipo:'single',
+    q:'¿Cómo es elegido el presidente y qué significa "mayoría simple"?',
+    opts:[
+      'Por el Congreso; mayoría simple significa que la mitad más uno vota por él',
+      'Por votación popular directa; gana el que obtiene más votos',
+      'Por la Corte Suprema; mayoría simple significa unanimidad',
+      'Por el Senado; gana el candidato con más experiencia'
+    ],
+    c:1,
+    exp:'✔ El presidente es elegido por votación popular directa y mayoría simple: gana el que obtiene más votos.'
+  },
+  {
+    cat:'Poder Ejecutivo', emoji:'🏠', color:'#C8102E', tipo:'single',
+    q:'¿Cuándo es la toma de posesión del presidente y por qué esa fecha?',
+    opts:[
+      'El 1 de enero, Año Nuevo',
+      'El 14 de mayo, aniversario de la Independencia',
+      'El 15 de agosto, aniversario de la ciudad de Asunción',
+      'El 3 de noviembre, Día de la Democracia'
+    ],
+    c:2,
+    exp:'✔ La toma de posesión es el 15 de agosto, aniversario de la ciudad de Asunción.'
+  },
+  {
+    cat:'Poder Ejecutivo', emoji:'🏠', color:'#C8102E', tipo:'single',
+    q:'¿Dónde se encuentra el despacho del presidente?',
+    opts:['En el Palacio de Justicia','En el Congreso Nacional','En el Palacio de López o Palacio Presidencial','En la Municipalidad de Asunción'],
+    c:2,
+    exp:'✔ El despacho del presidente se encuentra en el Palacio de López o Palacio Presidencial.'
+  },
+  {
+    cat:'Poder Ejecutivo', emoji:'🏠', color:'#C8102E', tipo:'single',
+    q:'¿A quiénes nombra el presidente para administrar los ministerios?',
+    opts:['A los diputados','A los senadores','A los miembros de su equipo de gobierno (ministros)','A los jueces'],
+    c:2,
+    exp:'✔ El presidente nombra a los miembros de su equipo de gobierno, quienes administran los diferentes ministerios: Salud, Hacienda, Educación, Energía y Minas, etc.'
+  },
+
+  // ── PODER LEGISLATIVO ──
+  {
+    cat:'Poder Legislativo', emoji:'🏛️', color:'#003087', tipo:'single',
+    q:'¿De qué se encarga el Poder Legislativo?',
+    opts:[
+      'De aplicar las leyes y dictar justicia',
+      'De hacer cumplir la Constitución',
+      'De crear las leyes que rigen al país y controlar los actos del Gobierno',
+      'De organizar las elecciones'
+    ],
+    c:2,
+    exp:'✔ El Poder Legislativo es el responsable de crear las leyes que rigen al país, además de controlar los actos del Gobierno.'
+  },
+  {
+    cat:'Poder Legislativo', emoji:'🏛️', color:'#003087', tipo:'multi',
+    q:'¿Por qué dos cámaras está compuesto el Poder Legislativo? (Seleccioná las dos)',
+    opts:['El Senado','El Tribunal Electoral','La Cámara de Diputados','El Consejo de Ministros'],
+    c:[0,2],
+    exp:'✔ El Poder Legislativo está compuesto por el Senado y la Cámara de Diputados. Ambos forman el Congreso Nacional.'
+  },
+  {
+    cat:'Poder Legislativo', emoji:'🏛️', color:'#003087', tipo:'single',
+    q:'¿Cuántos senadores titulares tiene el Senado?',
+    opts:['30','45','60','80'],
+    c:1,
+    exp:'✔ El Senado está formado por 45 senadores titulares (más otros 30 suplentes), además de los senadores vitalicios que han sido presidentes del país.'
+  },
+  {
+    cat:'Poder Legislativo', emoji:'🏛️', color:'#003087', tipo:'single',
+    q:'¿Cuántos diputados hay en la Cámara de Diputados?',
+    opts:['45','60','80','100'],
+    c:2,
+    exp:'✔ Los diputados son 80 y representan los intereses departamentales.'
+  },
+  {
+    cat:'Poder Legislativo', emoji:'🏛️', color:'#003087', tipo:'single',
+    q:'¿Por cuántos años permanecen en el cargo senadores y diputados?',
+    opts:['3 años','4 años','5 años','6 años'],
+    c:2,
+    exp:'✔ Senadores y diputados permanecen cinco años en el cargo y pueden ser reelectos.'
+  },
+  {
+    cat:'Poder Legislativo', emoji:'🏛️', color:'#003087', tipo:'single',
+    q:'¿Cómo son elegidos los senadores?',
+    opts:[
+      'Por el presidente de la República',
+      'Directamente por el pueblo en una sola circunscripción que es todo el territorio nacional',
+      'Por los gobernadores departamentales',
+      'Por la Corte Suprema de Justicia'
+    ],
+    c:1,
+    exp:'✔ Los senadores son electos directamente por el pueblo en una sola circunscripción, que es todo el territorio nacional.'
+  },
+  {
+    cat:'Poder Legislativo', emoji:'🏛️', color:'#003087', tipo:'single',
+    q:'¿Cómo son elegidos los diputados?',
+    opts:[
+      'Por el presidente en cada departamento',
+      'Por votación directa, secreta y universal en los colegios departamentales',
+      'Por el Senado',
+      'Por los intendentes municipales'
+    ],
+    c:1,
+    exp:'✔ Los diputados son elegidos por votación directa, secreta y universal en los colegios departamentales.'
+  },
+
+  // ── PODER JUDICIAL ──
+  {
+    cat:'Poder Judicial', emoji:'⚖️', color:'#4A148C', tipo:'single',
+    q:'¿De qué se encarga el Poder Judicial?',
+    opts:[
+      'De crear las leyes del país',
+      'De hacer cumplir la Constitución y los tratados',
+      'De aplicar las leyes que aprueba el Congreso, hacer cumplir la Constitución y dictar justicia',
+      'De organizar las elecciones nacionales'
+    ],
+    c:2,
+    exp:'✔ El Poder Judicial se encarga de aplicar las leyes que aprueba el Congreso Nacional, hacer cumplir lo que establece la Constitución y dictar justicia.'
+  },
+  {
+    cat:'Poder Judicial', emoji:'⚖️', color:'#4A148C', tipo:'single',
+    q:'¿Qué hacen los jueces cuando alguien comete un delito?',
+    opts:[
+      'Aprueban una nueva ley',
+      'Analizan si se actuó en contra de la ley y fijan un castigo o una pena a los culpables',
+      'Informan al presidente para que tome la decisión',
+      'Envían el caso al Senado para su análisis'
+    ],
+    c:1,
+    exp:'✔ Los jueces analizan si se actuó en contra de la ley y luego fijan un castigo o una pena a los culpables.'
+  },
+  {
+    cat:'Poder Judicial', emoji:'⚖️', color:'#4A148C', tipo:'single',
+    q:'¿Cuál es el órgano más importante del Poder Judicial?',
+    opts:['El Tribunal Electoral','El Ministerio Público','La Corte Suprema de Justicia','El Congreso Nacional'],
+    c:2,
+    exp:'✔ La Corte Suprema de Justicia es el órgano más importante del Poder Judicial.'
+  },
+  {
+    cat:'Poder Judicial', emoji:'⚖️', color:'#4A148C', tipo:'single',
+    q:'¿Por cuántos magistrados está formada la Corte Suprema?',
+    opts:['Cinco','Siete','Nueve','Once'],
+    c:2,
+    exp:'✔ La Corte Suprema de Justicia está formada por nueve magistrados llamados ministros.'
+  },
+  {
+    cat:'Poder Judicial', emoji:'⚖️', color:'#4A148C', tipo:'multi',
+    q:'¿Cuáles son los requisitos para integrar la Corte Suprema? (Seleccioná todos)',
+    opts:[
+      'Tener nacionalidad paraguaya',
+      'Haber cumplido 35 años',
+      'Poseer título universitario de Doctor en Derecho',
+      'Gozar de notoria honorabilidad',
+      'Haber sido diputado o senador',
+      'Haber ejercido al menos 10 años la profesión, magistratura judicial o cátedra universitaria'
+    ],
+    c:[0,1,2,3,5],
+    exp:'✔ Para integrar la Corte Suprema se requiere: nacionalidad paraguaya, tener 35 años, título de Doctor en Derecho, honorabilidad reconocida y al menos 10 años de ejercicio profesional o en la magistratura.'
+  },
+  {
+    cat:'Poder Judicial', emoji:'⚖️', color:'#4A148C', tipo:'single',
+    q:'¿Por cuánto tiempo es elegido el presidente de la Corte Suprema y puede ser reelecto?',
+    opts:[
+      'Por dos años; no puede ser reelecto',
+      'Por un año; puede ser reelecto al cabo de dos años de su anterior presidencia',
+      'Por cinco años; puede ser reelecto una vez',
+      'Por tres años; no puede ser reelecto'
+    ],
+    c:1,
+    exp:'✔ El presidente de la Corte es elegido por sus compañeros y se mantiene en el cargo por un año. Puede ser reelecto al cabo de dos años de su anterior presidencia.'
+  },
+  {
+    cat:'Poder Judicial', emoji:'⚖️', color:'#4A148C', tipo:'single',
+    q:'¿Dónde se organiza el trabajo de los jueces en Asunción?',
+    opts:['En el Palacio de López','En el Congreso Nacional','En el Palacio de Justicia','En la Municipalidad'],
+    c:2,
+    exp:'✔ El Palacio de Justicia, en Asunción, es el centro donde se organiza el trabajo de los jueces.'
+  },
+];
+
+let actual=0, puntaje=0, respondido=false, historial=[], multiSel=new Set();
+
+function initHistorial() {
+  historial = PREGUNTAS.map(()=>({respondido:false,seleccion:null,correcta:false}));
+}
+
+function render() {
+  if(actual>=PREGUNTAS.length){mostrarResultado();return;}
+  const p=PREGUNTAS[actual], h=historial[actual];
+  const pct=Math.round((actual/PREGUNTAS.length)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-count').textContent=`${actual+1}/${PREGUNTAS.length}`;
+  document.getElementById('score-chip').textContent=`⭐ ${puntaje}`;
+  multiSel=new Set();
+
+  const letras=['A','B','C','D','E','F','G','H'];
+  let optsHTML='';
+
+  if(p.tipo==='single'){
+    optsHTML=`<div class="options">${p.opts.map((o,i)=>{
+      let cls='';
+      if(h.respondido){if(i===p.c) cls=' correct'; else if(i===h.seleccion) cls=' wrong';}
+      return `<button class="opt-btn${cls}" onclick="responder(${i})" id="opt-${i}" ${h.respondido?'disabled':''}>
+        <span class="opt-letra">${letras[i]}</span>${o}</button>`;
+    }).join('')}</div>`;
+  } else {
+    const bloq=h.respondido?' bloqueado':'';
+    optsHTML=`
+      <div class="multi-opts">${p.opts.map((o,i)=>{
+        let cls='';
+        if(h.respondido){
+          if(p.c.includes(i)) cls=' multi-correct';
+          else if(h.seleccion&&h.seleccion.includes(i)) cls=' multi-wrong';
+        }
+        const chkTxt=h.respondido?(p.c.includes(i)?'✓':(h.seleccion&&h.seleccion.includes(i)&&!p.c.includes(i)?'✗':'')):'';
+        return `<button class="multi-btn${cls}${bloq}" onclick="toggleMulti(${i})" id="mopt-${i}">
+          <span class="multi-check" id="mcheck-${i}">${chkTxt}</span>${o}</button>`;
+      }).join('')}</div>
+      <button class="btn-confirmar-multi" id="btn-confirmar" onclick="confirmarMulti()" ${h.respondido?'disabled':''}>Confirmar ✓</button>`;
+  }
+
+  const feedHTML=h.respondido
+    ?`<div class="feedback show ${h.correcta?'ok':'mal'}">${h.correcta?`🎉 ¡Muy bien! ${p.exp}`:`❌ Revisá. ${p.exp}`}</div>`
+    :`<div class="feedback" id="feedback"></div>`;
+
+  const tipoLabel=p.tipo==='multi'?'✏️ Selección múltiple — elegí todos los correctos':'✏️ Selección única';
+
+  document.getElementById('quiz-area').innerHTML=`
+    <div class="q-card">
+      <div style="margin-bottom:0.5rem;">
+        <span class="q-cat" style="color:${p.color};border-color:${p.color}44;background:${p.color}10;">
+          ${p.emoji} ${p.cat}
+        </span>
+      </div>
+      <div class="q-num">Pregunta ${actual+1} de ${PREGUNTAS.length}</div>
+      <div class="q-tipo">${tipoLabel}</div>
+      <div class="q-text">${p.q}</div>
+      ${optsHTML}
+      ${feedHTML}
+      <div class="nav-row">
+        <button class="btn-anterior ${actual>0?'show':''}" onclick="irAnterior()">← Anterior</button>
+        <button class="btn-reintentar ${h.respondido&&!h.correcta?'show':''}" onclick="reintentar()">🔄 Reintentar</button>
+        <button class="btn-siguiente ${h.respondido?'show':''}" onclick="siguiente()">
+          ${actual+1<PREGUNTAS.length?'Siguiente →':'Ver resultados 🏁'}
+        </button>
+      </div>
+    </div>`;
+  respondido=h.respondido;
+}
+
+function responder(idx){
+  if(respondido)return;
+  respondido=true;
+  const p=PREGUNTAS[actual],h=historial[actual];
+  const esOk=idx===p.c;
+  h.respondido=true;h.seleccion=idx;h.correcta=esOk;
+  if(esOk)puntaje++;
+  document.getElementById('score-chip').textContent=`⭐ ${puntaje}`;
+  document.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);
+  document.getElementById(`opt-${idx}`).classList.add(esOk?'correct':'wrong');
+  if(!esOk)document.getElementById(`opt-${p.c}`).classList.add('correct');
+  const fb=document.getElementById('feedback');
+  fb.className=`feedback show ${esOk?'ok':'mal'}`;
+  fb.innerHTML=esOk?`🎉 ¡Muy bien! ${p.exp}`:`❌ La correcta era: <strong>${p.opts[p.c]}</strong><br>${p.exp}`;
+  const nav=document.querySelector('.nav-row');
+  if(actual>0)nav.querySelector('.btn-anterior').classList.add('show');
+  if(!esOk)nav.querySelector('.btn-reintentar').classList.add('show');
+  nav.querySelector('.btn-siguiente').classList.add('show');
+}
+
+function toggleMulti(idx){
+  if(respondido)return;
+  if(multiSel.has(idx))multiSel.delete(idx);else multiSel.add(idx);
+  const btn=document.getElementById(`mopt-${idx}`);
+  const chk=document.getElementById(`mcheck-${idx}`);
+  if(multiSel.has(idx)){btn.classList.add('seleccionado');chk.textContent='✓';}
+  else{btn.classList.remove('seleccionado');chk.textContent='';}
+}
+
+function confirmarMulti(){
+  if(respondido)return;
+  respondido=true;
+  const p=PREGUNTAS[actual],h=historial[actual];
+  const sel=[...multiSel].sort(),corr=[...p.c].sort();
+  const esOk=JSON.stringify(sel)===JSON.stringify(corr);
+  h.respondido=true;h.seleccion=sel;h.correcta=esOk;
+  if(esOk)puntaje++;
+  document.getElementById('score-chip').textContent=`⭐ ${puntaje}`;
+  document.getElementById('btn-confirmar').disabled=true;
+  document.querySelectorAll('.multi-btn').forEach(b=>b.classList.add('bloqueado'));
+  p.opts.forEach((_,i)=>{
+    const btn=document.getElementById(`mopt-${i}`);
+    const chk=document.getElementById(`mcheck-${i}`);
+    if(p.c.includes(i)){btn.classList.add('multi-correct');chk.textContent='✓';}
+    else if(multiSel.has(i)){btn.classList.add('multi-wrong');chk.textContent='✗';}
+  });
+  const fb=document.getElementById('feedback');
+  fb.className=`feedback show ${esOk?'ok':'mal'}`;
+  fb.innerHTML=esOk?`🎉 ¡Perfecto! ${p.exp}`:`❌ Revisá. ${p.exp}`;
+  const nav=document.querySelector('.nav-row');
+  if(actual>0)nav.querySelector('.btn-anterior').classList.add('show');
+  if(!esOk)nav.querySelector('.btn-reintentar').classList.add('show');
+  nav.querySelector('.btn-siguiente').classList.add('show');
+}
+
+function reintentar(){
+  const h=historial[actual];
+  if(h.correcta)return;
+  h.respondido=false;h.seleccion=null;h.correcta=false;
+  respondido=false;multiSel=new Set();render();
+}
+
+function siguiente(){actual++;render();}
+function irAnterior(){if(actual>0){actual--;render();}}
+
+function mostrarResultado(){
+  document.getElementById('prog-fill').style.width='100%';
+  document.getElementById('prog-count').textContent=`${PREGUNTAS.length}/${PREGUNTAS.length}`;
+  document.getElementById('quiz-area').innerHTML='';
+  const total=PREGUNTAS.length,pct=Math.round((puntaje/total)*100);
+  const [emoji,msg]=
+    pct===100?['🏆','¡Perfecto! ¡Sos un experto en el Estado paraguayo!']:
+    pct>=80?['🌟','¡Excelente! ¡Casi todo bien!']:
+    pct>=60?['😊','¡Bien! Repasá un poco más.']:
+    ['💪','¡Seguí practicando, vos podés!'];
+  const resumen=historial.map((h,i)=>
+    `<div class="res-item ${h.correcta?'ok2':'no2'}">
+      <span class="ri">${h.correcta?'✅':'❌'}</span>P${i+1}</div>`).join('');
+  const res=document.getElementById('resultado');
+  res.innerHTML=`
+    <div class="res-card">
+      <span class="res-emoji">${emoji}</span>
+      <div class="res-titulo">${msg}</div>
+      <div class="res-score">${puntaje}/${total}</div>
+      <div class="res-sub">Respondiste correctamente el <strong>${pct}%</strong> de las preguntas.</div>
+      <div class="resumen-grid">${resumen}</div>
+      <button class="btn-nuevo" onclick="reiniciar()">🔄 Empezar de nuevo</button>
+    </div>`;
+  res.classList.add('show');
+}
+
+function reiniciar(){
+  actual=0;puntaje=0;respondido=false;multiSel=new Set();
+  initHistorial();
+  document.getElementById('resultado').classList.remove('show');
+  document.getElementById('resultado').innerHTML='';
+  render();
+}
+
+initHistorial();
+render();
+</script>
+</body>
+</html>
