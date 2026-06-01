@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tablas de multiplicar</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --green: #58CC02;
+    --green-dark: #46A800;
+    --green-light: #D7F5A3;
+    --blue: #1CB0F6;
+    --blue-light: #DDF4FF;
+    --red: #FF4B4B;
+    --red-light: #FFE0E0;
+    --yellow: #FFC800;
+    --yellow-light: #FFF3C4;
+    --gray: #AFAFAF;
+    --gray-light: #F7F7F7;
+    --text: #3C3C3C;
+    --text-light: #777;
+    --white: #fff;
+    --radius: 16px;
+    --radius-lg: 24px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #F0F4FF;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  .app {
+    background: var(--white);
+    border-radius: 28px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.10);
+    width: 100%;
+    max-width: 440px;
+    overflow: hidden;
+  }
+  .screen { display: none; padding: 2rem 1.75rem 2.5rem; }
+  .screen.active { display: block; }
+
+  /* ---- TOP BAR ---- */
+  .top-bar {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 2rem;
+  }
+  .close-btn {
+    width: 36px; height: 36px; border-radius: 50%; border: 2px solid #E5E5E5;
+    background: var(--white); cursor: pointer; font-size: 18px; color: var(--gray);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    transition: all .15s;
+  }
+  .close-btn:hover { border-color: var(--red); color: var(--red); }
+  .prog-track {
+    flex: 1; height: 14px; background: #E5E5E5;
+    border-radius: 99px; overflow: hidden;
+  }
+  .prog-fill {
+    height: 100%; border-radius: 99px; background: var(--green);
+    transition: width 0.4s cubic-bezier(.4,0,.2,1);
+  }
+  .step-badge {
+    font-size: 13px; font-weight: 700; color: var(--gray);
+    min-width: 38px; text-align: right;
+  }
+
+  /* ---- SELECT SCREEN ---- */
+  .sel-header { margin-bottom: 1.75rem; }
+  .sel-header h1 { font-size: 26px; font-weight: 900; color: var(--text); margin-bottom: 4px; }
+  .sel-header p { font-size: 14px; color: var(--text-light); font-weight: 600; }
+  .tables-grid {
+    display: grid; grid-template-columns: repeat(5,1fr); gap: 10px;
+  }
+  .tbl-btn {
+    aspect-ratio: 1; border-radius: 14px; border: 2.5px solid #E5E5E5;
+    background: var(--white); font-size: 22px; font-weight: 900; color: var(--text);
+    cursor: pointer; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 3px; transition: all .15s;
+  }
+  .tbl-btn:hover { border-color: var(--green); background: var(--green-light); transform: translateY(-2px); }
+  .tbl-btn.has-stars { border-color: var(--green); }
+  .tbl-btn .mini-stars { font-size: 10px; letter-spacing: 0px; color: var(--yellow); }
+
+  /* ---- LEARN SCREEN ---- */
+  .learn-label {
+    text-align: center; font-size: 12px; font-weight: 800; color: var(--blue);
+    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.25rem;
+  }
+  .flash-card {
+    background: var(--gray-light); border-radius: var(--radius-lg);
+    padding: 3rem 1.5rem; text-align: center; margin-bottom: 1.75rem;
+    border: 2.5px solid #E5E5E5; transition: border-color .2s;
+  }
+  .flash-card.revealed { border-color: var(--green); background: #F5FFF0; }
+  .flash-eq {
+    font-size: 56px; font-weight: 900; color: var(--text); line-height: 1;
+    margin-bottom: 1rem;
+  }
+  .flash-ans {
+    font-size: 52px; font-weight: 900; color: var(--green);
+    opacity: 0; transition: opacity .3s; min-height: 64px;
+  }
+  .flash-ans.show { opacity: 1; }
+  .flash-hint { font-size: 13px; color: var(--text-light); font-weight: 600; margin-top: 8px; min-height: 20px; }
+
+  /* ---- QUIZ SCREEN ---- */
+  .quiz-label {
+    text-align: center; font-size: 12px; font-weight: 800; color: var(--yellow);
+    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem;
+  }
+  .quiz-title { text-align: center; font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 1.5rem; }
+  .quiz-eq {
+    text-align: center; font-size: 52px; font-weight: 900; color: var(--text);
+    margin-bottom: 1.5rem; line-height: 1;
+  }
+  .quiz-input {
+    width: 100%; font-size: 36px; font-weight: 900; text-align: center;
+    padding: 0.75rem 1rem; border-radius: var(--radius); border: 2.5px solid #E5E5E5;
+    background: var(--white); color: var(--text); outline: none;
+    font-family: 'Nunito', sans-serif; transition: border .15s; margin-bottom: 1rem;
+  }
+  .quiz-input:focus { border-color: var(--blue); }
+  .quiz-input.correct { border-color: var(--green); background: var(--green-light); color: var(--green-dark); }
+  .quiz-input.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .quiz-input:disabled { opacity: 1; }
+
+  .feedback-box {
+    border-radius: var(--radius); padding: 1rem 1.25rem;
+    margin-bottom: 1rem; display: none;
+  }
+  .feedback-box.ok { display: block; background: var(--green-light); border: 2px solid var(--green); }
+  .feedback-box.err { display: block; background: var(--red-light); border: 2px solid var(--red); }
+  .feedback-box .fb-icon { font-size: 22px; margin-bottom: 4px; }
+  .feedback-box .fb-title { font-size: 15px; font-weight: 800; }
+  .fb-title.ok { color: var(--green-dark); }
+  .fb-title.err { color: var(--red); }
+  .feedback-box .fb-sub { font-size: 13px; font-weight: 600; margin-top: 3px; }
+  .fb-sub.ok { color: var(--green-dark); }
+  .fb-sub.err { color: var(--red); }
+
+  /* ---- BUTTONS ---- */
+  .btn {
+    display: block; width: 100%; padding: 1rem; border-radius: var(--radius);
+    font-size: 16px; font-weight: 800; font-family: 'Nunito', sans-serif;
+    cursor: pointer; border: none; transition: all .15s; margin-bottom: 0.75rem;
+    letter-spacing: 0.3px;
+  }
+  .btn:last-child { margin-bottom: 0; }
+  .btn-green {
+    background: var(--green); color: var(--white);
+    box-shadow: 0 4px 0 var(--green-dark);
+  }
+  .btn-green:hover { background: var(--green-dark); transform: translateY(-1px); }
+  .btn-green:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--green-dark); }
+  .btn-blue {
+    background: var(--blue); color: var(--white);
+    box-shadow: 0 4px 0 #109BD8;
+  }
+  .btn-blue:hover { background: #109BD8; transform: translateY(-1px); }
+  .btn-blue:active { transform: translateY(2px); box-shadow: 0 2px 0 #109BD8; }
+  .btn-outline {
+    background: var(--white); color: var(--text-light);
+    border: 2.5px solid #E5E5E5;
+  }
+  .btn-outline:hover { border-color: var(--gray); color: var(--text); }
+
+  /* ---- RESULT SCREEN ---- */
+  .result-hero { text-align: center; margin-bottom: 1.75rem; }
+  .result-icon { font-size: 72px; margin-bottom: 0.5rem; }
+  .result-title { font-size: 28px; font-weight: 900; color: var(--text); margin-bottom: 4px; }
+  .result-sub { font-size: 14px; font-weight: 600; color: var(--text-light); }
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+  .stat-card {
+    background: var(--gray-light); border-radius: var(--radius);
+    padding: 1rem; text-align: center;
+  }
+  .stat-num { font-size: 32px; font-weight: 900; color: var(--text); }
+  .stat-num.green { color: var(--green); }
+  .stat-num.red { color: var(--red); }
+  .stat-lbl { font-size: 12px; font-weight: 700; color: var(--text-light); margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
+  .review-title { font-size: 13px; font-weight: 800; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.75rem; }
+  .review-list { margin-bottom: 1.75rem; border-radius: var(--radius); overflow: hidden; border: 2px solid #E5E5E5; }
+  .review-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.75rem 1rem; font-size: 14px; font-weight: 700;
+    border-bottom: 1.5px solid #F0F0F0;
+  }
+  .review-item:last-child { border-bottom: none; }
+  .review-item.ok { background: #FAFFFA; }
+  .review-item.err { background: #FFFAFA; }
+  .review-eq { color: var(--text); }
+  .review-tag {
+    font-size: 12px; font-weight: 800; padding: 3px 10px;
+    border-radius: 99px;
+  }
+  .review-tag.ok { background: var(--green-light); color: var(--green-dark); }
+  .review-tag.err { background: var(--red-light); color: var(--red); }
+
+  /* ---- TRANSITION SCREEN ---- */
+  .transition-screen { text-align: center; padding: 3rem 1.75rem; }
+  .transition-screen .big-icon { font-size: 80px; margin-bottom: 1rem; }
+  .transition-screen h2 { font-size: 26px; font-weight: 900; color: var(--text); margin-bottom: 0.5rem; }
+  .transition-screen p { font-size: 15px; font-weight: 600; color: var(--text-light); margin-bottom: 2rem; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- SELECT -->
+  <div id="s-select" class="screen active">
+    <div class="sel-header">
+      <h1>Tablas de multiplicar</h1>
+      <p>Elegí una tabla para empezar</p>
+    </div>
+    <div class="tables-grid" id="tbl-grid"></div>
+  </div>
+
+  <!-- LEARN -->
+  <div id="s-learn" class="screen">
+    <div class="top-bar">
+      <button class="close-btn" onclick="goSelect()" title="Salir">✕</button>
+      <div class="prog-track"><div class="prog-fill" id="learn-prog" style="width:0%"></div></div>
+      <span class="step-badge" id="learn-step">1/10</span>
+    </div>
+    <p class="learn-label">Aprendé · Tabla del <span id="learn-num"></span></p>
+    <div class="flash-card" id="flash-card">
+      <div class="flash-eq" id="flash-eq"></div>
+      <div class="flash-ans" id="flash-ans"></div>
+      <div class="flash-hint" id="flash-hint">Tocá para ver la respuesta</div>
+    </div>
+    <button class="btn btn-blue" id="learn-btn" onclick="revealOrNext()">Ver respuesta</button>
+    <button class="btn btn-outline" onclick="goSelect()">Cambiar tabla</button>
+  </div>
+
+  <!-- TRANSITION -->
+  <div id="s-transition" class="screen transition-screen">
+    <div class="big-icon">🎯</div>
+    <h2>¡Listo para la prueba!</h2>
+    <p>Viste todas las multiplicaciones de la tabla del <strong id="trans-num"></strong>.<br>Ahora es tu turno de responder.</p>
+    <button class="btn btn-green" onclick="startQuiz()">Comenzar prueba</button>
+    <button class="btn btn-outline" onclick="startLearn(currentTable)">Repasar de nuevo</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="s-quiz" class="screen">
+    <div class="top-bar">
+      <button class="close-btn" onclick="goSelect()" title="Salir">✕</button>
+      <div class="prog-track"><div class="prog-fill" id="quiz-prog" style="width:0%"></div></div>
+      <span class="step-badge" id="quiz-step">1/10</span>
+    </div>
+    <p class="quiz-label">Prueba · Tabla del <span id="quiz-num"></span></p>
+    <p class="quiz-title" id="quiz-title">¿Cuánto es...?</p>
+    <div class="quiz-eq" id="quiz-eq"></div>
+    <input class="quiz-input" id="quiz-input" type="number" inputmode="numeric" placeholder="?" autocomplete="off" />
+    <div class="feedback-box" id="feedback-box">
+      <div class="fb-icon" id="fb-icon"></div>
+      <div class="fb-title" id="fb-title"></div>
+      <div class="fb-sub" id="fb-sub"></div>
+    </div>
+    <button class="btn btn-green" id="quiz-btn" onclick="quizCheck()">Verificar</button>
+  </div>
+
+  <!-- RESULT -->
+  <div id="s-result" class="screen">
+    <div class="result-hero">
+      <div class="result-icon" id="res-icon"></div>
+      <div class="result-title" id="res-title"></div>
+      <div class="result-sub" id="res-sub"></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num green" id="res-correct"></div>
+        <div class="stat-lbl">Correctas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num red" id="res-wrong"></div>
+        <div class="stat-lbl">Errores</div>
+      </div>
+    </div>
+    <p class="review-title">Resumen</p>
+    <div class="review-list" id="review-list"></div>
+    <button class="btn btn-green" onclick="startQuiz()">Repetir prueba</button>
+    <button class="btn btn-blue" onclick="startLearn(currentTable)">Repasar tabla</button>
+    <button class="btn btn-outline" onclick="goSelect()">Elegir otra tabla</button>
+  </div>
+
+</div>
+
+<script>
+  let currentTable = 1;
+  let learnIdx = 0;
+  let quizIdx = 0;
+  let quizAnswers = [];
+  let quizBlocked = false;
+  let tableStars = {};
+
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function goSelect() { renderGrid(); show('s-select'); }
+
+  function renderGrid() {
+    const g = document.getElementById('tbl-grid');
+    g.innerHTML = '';
+    for (let t = 1; t <= 10; t++) {
+      const b = document.createElement('button');
+      const s = tableStars[t] || 0;
+      b.className = 'tbl-btn' + (s > 0 ? ' has-stars' : '');
+      b.innerHTML = `<span>${t}</span><span class="mini-stars">${'★'.repeat(s) + '☆'.repeat(3 - s)}</span>`;
+      b.onclick = () => startLearn(t);
+      g.appendChild(b);
+    }
+  }
+
+  function startLearn(t) {
+    currentTable = t;
+    learnIdx = 0;
+    document.getElementById('learn-num').textContent = t;
+    show('s-learn');
+    renderLearnCard();
+  }
+
+  function renderLearnCard() {
+    const n = learnIdx + 1;
+    document.getElementById('learn-prog').style.width = (n / 10 * 100) + '%';
+    document.getElementById('learn-step').textContent = n + '/10';
+    const eq = document.getElementById('flash-eq');
+    const ans = document.getElementById('flash-ans');
+    const hint = document.getElementById('flash-hint');
+    const btn = document.getElementById('learn-btn');
+    const card = document.getElementById('flash-card');
+    eq.textContent = currentTable + ' × ' + n + ' =';
+    ans.textContent = currentTable * n;
+    ans.classList.remove('show');
+    card.classList.remove('revealed');
+    hint.textContent = 'Tocá para ver la respuesta';
+    btn.textContent = 'Ver respuesta';
+    card.onclick = revealOrNext;
+  }
+
+  function revealOrNext() {
+    const ans = document.getElementById('flash-ans');
+    const btn = document.getElementById('learn-btn');
+    const card = document.getElementById('flash-card');
+    const hint = document.getElementById('flash-hint');
+
+    if (!ans.classList.contains('show')) {
+      ans.classList.add('show');
+      card.classList.add('revealed');
+      hint.textContent = '';
+      const isLast = learnIdx >= 9;
+      btn.textContent = isLast ? 'Ir a la prueba →' : 'Siguiente →';
+      btn.onclick = revealOrNext;
+    } else {
+      if (learnIdx >= 9) {
+        document.getElementById('trans-num').textContent = currentTable;
+        show('s-transition');
+      } else {
+        learnIdx++;
+        renderLearnCard();
+      }
+    }
+  }
+
+  function startQuiz() {
+    quizIdx = 0;
+    quizAnswers = [];
+    quizBlocked = false;
+    document.getElementById('quiz-num').textContent = currentTable;
+    show('s-quiz');
+    renderQuizQ();
+  }
+
+  function renderQuizQ() {
+    const n = quizIdx + 1;
+    document.getElementById('quiz-prog').style.width = (n / 10 * 100) + '%';
+    document.getElementById('quiz-step').textContent = n + '/10';
+    document.getElementById('quiz-eq').textContent = currentTable + ' × ' + n + ' = ?';
+    const inp = document.getElementById('quiz-input');
+    inp.value = '';
+    inp.className = 'quiz-input';
+    inp.removeAttribute('disabled');
+    const fb = document.getElementById('feedback-box');
+    fb.className = 'feedback-box';
+    const btn = document.getElementById('quiz-btn');
+    btn.textContent = 'Verificar';
+    btn.onclick = quizCheck;
+    quizBlocked = false;
+    setTimeout(() => inp.focus(), 80);
+  }
+
+  document.getElementById('quiz-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !quizBlocked) quizCheck();
+  });
+
+  function quizCheck() {
+    if (quizBlocked) return;
+    const inp = document.getElementById('quiz-input');
+    const val = parseInt(inp.value.trim(), 10);
+    if (isNaN(val) || inp.value.trim() === '') return;
+    quizBlocked = true;
+    const n = quizIdx + 1;
+    const correct = currentTable * n;
+    const ok = val === correct;
+    quizAnswers.push({ n, correct, given: val, ok });
+    inp.classList.add(ok ? 'correct' : 'wrong');
+    inp.setAttribute('disabled', '');
+    const fb = document.getElementById('feedback-box');
+    fb.className = 'feedback-box ' + (ok ? 'ok' : 'err');
+    document.getElementById('fb-icon').textContent = ok ? '✅' : '❌';
+    const fbt = document.getElementById('fb-title');
+    fbt.className = 'fb-title ' + (ok ? 'ok' : 'err');
+    fbt.textContent = ok ? '¡Correcto!' : '¡Casi!';
+    const fbs = document.getElementById('fb-sub');
+    fbs.className = 'fb-sub ' + (ok ? 'ok' : 'err');
+    fbs.textContent = ok
+      ? currentTable + ' × ' + n + ' = ' + correct
+      : 'La respuesta correcta es ' + correct;
+    const btn = document.getElementById('quiz-btn');
+    const isLast = quizIdx >= 9;
+    btn.textContent = isLast ? 'Ver resultado' : 'Continuar';
+    btn.onclick = () => {
+      if (isLast) showResult();
+      else { quizIdx++; renderQuizQ(); }
+    };
+  }
+
+  function showResult() {
+    const correct = quizAnswers.filter(a => a.ok).length;
+    const wrong = 10 - correct;
+    const pct = correct / 10;
+    let stars, icon, title, sub;
+    if (pct === 1)       { stars = 3; icon = '🏆'; title = '¡Perfecto!';      sub = 'Sin ningún error. ¡Sos una estrella!'; }
+    else if (pct >= 0.7) { stars = 2; icon = '🌟'; title = '¡Muy bien!';      sub = 'Casi perfecto. ¡Seguí así!'; }
+    else if (pct >= 0.4) { stars = 1; icon = '💪'; title = 'Buen intento';    sub = 'Podés mejorar. ¡Volvé a intentarlo!'; }
+    else                 { stars = 0; icon = '📚'; title = 'A practicar más'; sub = 'Repasá la tabla e intentalo de nuevo.'; }
+    tableStars[currentTable] = Math.max(tableStars[currentTable] || 0, stars);
+    document.getElementById('res-icon').textContent = icon;
+    document.getElementById('res-title').textContent = title;
+    document.getElementById('res-sub').textContent = sub;
+    document.getElementById('res-correct').textContent = correct;
+    document.getElementById('res-wrong').textContent = wrong;
+    const list = document.getElementById('review-list');
+    list.innerHTML = quizAnswers.map(a => `
+      <div class="review-item ${a.ok ? 'ok' : 'err'}">
+        <span class="review-eq">${currentTable} × ${a.n} = ${a.correct}</span>
+        <span class="review-tag ${a.ok ? 'ok' : 'err'}">${a.ok ? '✓ Correcto' : '✗ ' + a.given}</span>
+      </div>`).join('');
+    show('s-result');
+  }
+
+  renderGrid();
+</script>
+</body>
+</html>
